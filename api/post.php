@@ -54,6 +54,7 @@ else if ($_SERVER['REQUEST_METHOD']=="PUT"){
     parse_str($data,$_PUT);
     $json = json_encode($_PUT);
     echo $json;
+    echo $json;
 }
 
 // DELETE POST
