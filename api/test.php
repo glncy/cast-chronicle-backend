@@ -6,17 +6,23 @@
     <title>Document</title>
 </head>
 <body>
+    <p id="content"></p>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script>
     function testRequest(){
         $.ajax({
-            type: 'GET',
-            url: 'post.php',
+            url: "post.php",
+            type: "GET",
+            dataType: 'json',
             data: {
-                id:'1',post:'2'
+                article_id:'7'
             },
-            success: function(r){
-                console.log(r);
+            success: function (r) {
+                var str = JSON.stringify(r);
+                var obj = JSON.parse(str);
+                console.log(obj);
+                console.log(obj[0].body);
+                $("#content").html(obj[0].body);
             }
         });
     }
