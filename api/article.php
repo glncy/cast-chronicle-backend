@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
 }
 
 // NEW POST
-else if ($_SERVER['REQUEST_METHOD']=="POST"){
+elseif ($_SERVER['REQUEST_METHOD']=="POST"){
     if ((isset($_POST['access_token']))&&(isset($_POST['title']))&&(isset($_POST['body'])&&(isset($_POST['status'])))){
         $access_token = htmlspecialchars($conn->real_escape_string($_POST['access_token']));
         $sql = "SELECT * FROM op_users WHERE token='$access_token' LIMIT 1";
@@ -74,7 +74,7 @@ else if ($_SERVER['REQUEST_METHOD']=="POST"){
 }
 
 // EDIT POST
-else if ($_SERVER['REQUEST_METHOD']=="PUT"){
+elseif ($_SERVER['REQUEST_METHOD']=="PUT"){
     $data = file_get_contents('php://input');
     $_PUT = array();
     parse_str($data,$_PUT);
@@ -110,7 +110,7 @@ else if ($_SERVER['REQUEST_METHOD']=="PUT"){
 }
 
 // DELETE POST
-else if ($_SERVER['REQUEST_METHOD']=="DELETE"){
+elseif ($_SERVER['REQUEST_METHOD']=="DELETE"){
     // GET DELETE REQUEST DATA
     $data = file_get_contents('php://input');
     $_DELETE = array();
@@ -157,7 +157,7 @@ else if ($_SERVER['REQUEST_METHOD']=="DELETE"){
         if (isset($_DELETE['article_id'])){
             $response = array("message" => "Required Access Token", "status" => "no_access_token");
         }
-        else if (isset($_DELETE['access_token'])){
+        elseif (isset($_DELETE['access_token'])){
             $response = array("message" => "Required Article ID", "status" => "no_target_article_id");
         }
         else {
