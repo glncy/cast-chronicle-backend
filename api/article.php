@@ -1,5 +1,6 @@
 <?php
-// POSTS API
+
+// ARTICLE API
 
 include('../config/connection.php');
 include('../functions.php');
