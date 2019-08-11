@@ -50,13 +50,13 @@ else if ($_SERVER['REQUEST_METHOD']=="POST"){
         if ($result->num_rows > 0){
             $user = $result->fetch_assoc();
             $user_id = $user['id'];
-            $title = $conn->real_escape_string($_POST['title']);
+            $title = htmlspecialchars($conn->real_escape_string($_POST['title']));
             $status = $conn->real_escape_string($_POST['status']);
             $body = htmlspecialchars($conn->real_escape_string($_POST['body']));
             $time = time();
             $sql = "INSERT INTO op_articles (user_id,title,body,status,up_timestamp) VALUES ('$user_id','$title','$body','$status','$time')";
             if ($conn->query($sql)) {
-                $response = array("message" => "Added Successfully", "status" => "success_added_article");
+                $response = array("message" => "Added Successfully", "status" => "success_add");
             }
             else {
                 $response = array("message" => "Failed to Add due to Server Error", "status" => "server_error");
@@ -77,8 +77,35 @@ else if ($_SERVER['REQUEST_METHOD']=="PUT"){
     $data = file_get_contents('php://input');
     $_PUT = array();
     parse_str($data,$_PUT);
-    $json = json_encode($_PUT);
-    echo $json;
+
+    if ((isset($_PUT['access_token']))&&(isset($_PUT['title']))&&(isset($_PUT['body'])&&(isset($_PUT['status']))&&(isset($_PUT['article_id'])))){
+        $access_token = htmlspecialchars($conn->real_escape_string($_PUT['access_token']));
+        $sql = "SELECT * FROM op_users WHERE token='$access_token' LIMIT 1";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0){
+            $user = $result->fetch_assoc();
+            $user_id = $user['id'];
+            $article_id = htmlspecialchars($conn->real_escape_string($_PUT['article_id']));
+            $title = htmlspecialchars($conn->real_escape_string($_PUT['title']));
+            $status = $conn->real_escape_string($_PUT['status']);
+            $body = htmlspecialchars($conn->real_escape_string($_PUT['body']));
+            $time = time();
+            $sql = "UPDATE op_articles SET title='$title',status='$status',body='$body',up_timestamp='$time' WHERE id='$article_id'";
+            if ($conn->query($sql)) {
+                $response = array("message" => "Updated Successfully", "status" => "success_update");
+            }
+            else {
+                $response = array("message" => "Failed to Update due to Server Error", "status" => "server_error");
+            }
+        }
+        else {
+            $response = array("message" => "Denied Access", "status" => "no_access");
+        }
+    }
+    else{
+        $response = array("message" => "Required Parameters (access_token,article_id,title,body,status)", "status" => "no_parameters");
+    }
+    showResponse($response);
 }
 
 // DELETE POST

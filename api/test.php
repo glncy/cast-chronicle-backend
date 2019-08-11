@@ -15,7 +15,7 @@
             type: "GET",
             dataType: 'json',
             data: {
-                article_id:'7'
+                article_id:'8'
             },
             success: function (r) {
                 var str = JSON.stringify(r);
