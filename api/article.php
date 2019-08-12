@@ -44,19 +44,20 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
 
 // NEW POST
 elseif ($_SERVER['REQUEST_METHOD']=="POST"){
-    if ((isset($_POST['access_token']))&&(isset($_POST['title']))&&(isset($_POST['body'])&&(isset($_POST['status'])))){
+    if ((isset($_POST['access_token']))&&(isset($_POST['title']))&&(isset($_POST['body'])&&(isset($_POST['status']))&&(isset($_POST['category'])))){
         $access_token = htmlspecialchars($conn->real_escape_string($_POST['access_token']));
-        $sql = "SELECT * FROM op_users WHERE token='$access_token' LIMIT 1";
+        $sql = "SELECT * FROM op_tokens WHERE token='$access_token' LIMIT 1";
         $result = $conn->query($sql);
         if ($result->num_rows > 0){
-            $user = $result->fetch_assoc();
-            $user_id = $user['id'];
+            $token = $result->fetch_assoc();
+            $user_id = $token['user_id'];
             $title = htmlspecialchars($conn->real_escape_string($_POST['title']));
-            $status = $conn->real_escape_string($_POST['status']);
+            $category = htmlspecialchars($conn->real_escape_string($_POST['category']));
+            $status = htmlspecialchars($conn->real_escape_string($_POST['status']));
             $body = htmlspecialchars($conn->real_escape_string($_POST['body']));
             $time = time();
-            $sql = "INSERT INTO op_articles (user_id,title,body,status,up_timestamp) VALUES ('$user_id','$title','$body','$status','$time')";
-            if ($conn->query($sql)) {
+            $sql = "INSERT INTO op_articles (user_id,title,body,category,status,up_timestamp) VALUES ('$user_id','$title','$body','$category','$status','$time')";
+            if ($conn->query($sql) or die ($conn->error)) {
                 $response = array("message" => "Added Successfully", "status" => "success_add");
             }
             else {
@@ -68,7 +69,7 @@ elseif ($_SERVER['REQUEST_METHOD']=="POST"){
         }
     }
     else{
-        $response = array("message" => "Required Parameters (access_token,title,body,status)", "status" => "no_parameters");
+        $response = array("message" => "Required Parameters (access_token,title,body,category,status)", "status" => "no_parameters");
     }
     showResponse($response);
 }
@@ -79,24 +80,32 @@ elseif ($_SERVER['REQUEST_METHOD']=="PUT"){
     $_PUT = array();
     parse_str($data,$_PUT);
 
-    if ((isset($_PUT['access_token']))&&(isset($_PUT['title']))&&(isset($_PUT['body'])&&(isset($_PUT['status']))&&(isset($_PUT['article_id'])))){
+    if ((isset($_PUT['access_token']))&&(isset($_PUT['title']))&&(isset($_PUT['body'])&&(isset($_PUT['status']))&&(isset($_PUT['category']))&&(isset($_PUT['article_id'])))){
         $access_token = htmlspecialchars($conn->real_escape_string($_PUT['access_token']));
-        $sql = "SELECT * FROM op_users WHERE token='$access_token' LIMIT 1";
+        $sql = "SELECT * FROM op_tokens WHERE token='$access_token' LIMIT 1";
         $result = $conn->query($sql);
         if ($result->num_rows > 0){
-            $user = $result->fetch_assoc();
-            $user_id = $user['id'];
+            $token = $result->fetch_assoc();
+            $user_id = $token['user_id'];
             $article_id = htmlspecialchars($conn->real_escape_string($_PUT['article_id']));
-            $title = htmlspecialchars($conn->real_escape_string($_PUT['title']));
-            $status = $conn->real_escape_string($_PUT['status']);
-            $body = htmlspecialchars($conn->real_escape_string($_PUT['body']));
-            $time = time();
-            $sql = "UPDATE op_articles SET title='$title',status='$status',body='$body',up_timestamp='$time' WHERE id='$article_id'";
-            if ($conn->query($sql)) {
-                $response = array("message" => "Updated Successfully", "status" => "success_update");
+            $sql = "SELECT * FROM op_articles WHERE id='$article_id' AND user_id='$user_id' LIMIT 1";
+            $result = $conn->query($sql);
+            if ($result->num_rows > 0) {
+                $title = htmlspecialchars($conn->real_escape_string($_PUT['title']));
+                $status = htmlspecialchars($conn->real_escape_string($_PUT['status']));
+                $category = htmlspecialchars($conn->real_escape_string($_PUT['category']));
+                $body = htmlspecialchars($conn->real_escape_string($_PUT['body']));
+                $time = time();
+                $sql = "UPDATE op_articles SET title='$title',status='$status',body='$body',category='$category',up_timestamp='$time' WHERE id='$article_id'";
+                if ($conn->query($sql)) {
+                    $response = array("message" => "Updated Successfully", "status" => "success_update");
+                }
+                else {
+                    $response = array("message" => "Failed to Update due to Server Error", "status" => "server_error");
+                }
             }
             else {
-                $response = array("message" => "Failed to Update due to Server Error", "status" => "server_error");
+                $response = array("message" => "Denied Access", "status" => "no_access");
             }
         }
         else {
@@ -126,12 +135,12 @@ elseif ($_SERVER['REQUEST_METHOD']=="DELETE"){
         if ($result->num_rows > 0){
             // CHECK TOKEN IF EXISTING
             $article = $result->fetch_assoc();
-            $sql = "SELECT * FROM op_users WHERE token='$access_token' LIMIT 1";
+            $sql = "SELECT * FROM op_tokens WHERE token='$access_token' LIMIT 1";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
-                $user = $result->fetch_assoc();
+                $token = $result->fetch_assoc();
                 // CHECK IF IT HAS ACCESS TO THE ARTICLE
-                if ($user['id']==$article['user_id']){
+                if ($token['user_id']==$article['user_id']){
                     $sql = "DELETE FROM op_articles WHERE id='$article_id'";
                     if ($conn->query($sql)){
                         $response = array("message" => "Deleted Successfully", "status" => "success_delete");
