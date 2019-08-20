@@ -71,8 +71,8 @@ elseif ($_SERVER['REQUEST_METHOD']=="POST") {
             $random_token = md5($salt.rand(100000,999999).$user_id.$time);
             $sql = "INSERT INTO op_tokens (user_id,token,expiration) VALUES ('$user_id','$random_token','$time')";
             if ($conn->query($sql) or die($conn->error)) {
-                $response[] = $user;
                 $response[] = array("message" => "Login Successfully", "status" => "success_login", "access_token" => $random_token, "expiration" => $time);
+                $response[] = $user;
             }
             else{
                 $response[] = array("message" => "Failed to Login due to Server Error", "status" => "server_error");
