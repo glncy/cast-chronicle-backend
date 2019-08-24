@@ -79,7 +79,8 @@ elseif ($_SERVER['REQUEST_METHOD']=="POST") {
             }
         }
         else {
-            $response = array("message" => "Invalid Student ID and Password", "status" => "invalid_login");
+            $response[] = array("message" => "Invalid Student ID and Password", "status" => "invalid_login");
+            //$response = array("student_info" => "not_available");
         }
     }
     // LOGOUT USER

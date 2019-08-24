@@ -13,11 +13,17 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
     // SPECIFIC ARTICLE
     if (isset($_GET['article_id'])){
         $article_id = htmlspecialchars($conn->real_escape_string($_GET['article_id']));
-        $sql = "SELECT * FROM op_articles WHERE status='published' AND id='$article_id' ORDER BY id DESC";
+        $sql = "SELECT * FROM op_articles WHERE status='published' AND id='$article_id' ORDER BY up_timestamp DESC";
+    }
+    // START AND LIMIT GETTING ARTICLE
+    elseif ((isset($_GET['start']))&&(isset($_GET['limit']))) {
+        $start = $conn->real_escape_string($_GET['start']);
+        $limit = $conn->real_escape_string($_GET['limit']);
+        $sql = "SELECT * FROM op_articles WHERE status='published' AND ".$start." >= up_timestamp ORDER BY up_timestamp DESC LIMIT ".$limit;
     }
     // ALL ARTICLE
     else {
-        $sql = "SELECT * FROM op_articles WHERE status='published' ORDER BY id DESC";
+        $sql = "SELECT * FROM op_articles WHERE status='published' ORDER BY up_timestamp DESC";
     }
     $result = $conn->query($sql);
 
@@ -25,6 +31,8 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
     if ($result->num_rows > 0){
         while($row = $result->fetch_assoc()){
             $user_id = $row['user_id'];
+            $readableDateTime = date("F d, Y g:i A",$row['up_timestamp']);
+            $row['date_time'] = $readableDateTime;
             $row['body'] = htmlspecialchars_decode($row['body']);
             $getUserSql = "SELECT id,fname,lname,course,dept FROM op_users WHERE id='$user_id' LIMIT 1";
             $getUserResult = $conn->query($getUserSql) or die($conn->error());
