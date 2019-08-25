@@ -48,6 +48,14 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
         $response = array("message" => "No Articles Available", "status" => "no_content");
     }
 
+    if (isset($_GET['count'])){
+        if ($_GET['count']=="true") {
+            $response[] = count($response);
+        }
+        elseif ($_GET['count']=="only_count") {
+            $response = array("article_count" => count($response));
+        }
+    }
     showResponse($response);
 }
 
