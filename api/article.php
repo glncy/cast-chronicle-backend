@@ -19,21 +19,59 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
     elseif ((isset($_GET['start']))&&(isset($_GET['limit']))) {
         $start = $conn->real_escape_string($_GET['start']);
         $limit = $conn->real_escape_string($_GET['limit']);
-        $sql = "SELECT * FROM op_articles WHERE status='published' AND ".$start." >= up_timestamp ORDER BY up_timestamp DESC LIMIT ".$limit;
+        if (isset($_GET['category'])) {
+            $category = $conn->real_escape_string($_GET['category']);
+            $categorySql = " AND category='".$category."'";
+        }
+        else {
+            $categorySql = "";
+        }
+        if (isset($_GET['params'])) {
+            $params = $conn->real_escape_string($_GET['params']);
+            $sql = "SELECT ".$params." FROM op_articles WHERE status='published'".$categorySql." AND ".$start." >= up_timestamp ORDER BY up_timestamp DESC LIMIT ".$limit;
+        }
+        else {
+            $sql = "SELECT * FROM op_articles WHERE status='published'".$categorySql." AND ".$start." >= up_timestamp ORDER BY up_timestamp DESC LIMIT ".$limit;
+        }
     }
     // ALL ARTICLE
     else {
-        $sql = "SELECT * FROM op_articles WHERE status='published' ORDER BY up_timestamp DESC";
+        if (isset($_GET['category'])) {
+            $category = $conn->real_escape_string($_GET['category']);
+            $categorySql = " AND category='".$category."'";;
+        }
+        else {
+            $categorySql = "";
+        }
+        if (isset($_GET['params'])) {
+            $params = $conn->real_escape_string($_GET['params']);
+            $sql = "SELECT ".$params." FROM op_articles WHERE status='published'".$categorySql." ORDER BY up_timestamp DESC";
+        }
+        else {
+            $sql = "SELECT * FROM op_articles WHERE status='published'".$categorySql." ORDER BY up_timestamp DESC";
+        }
     }
-    $result = $conn->query($sql);
+    $result = $conn->query($sql) or die ($conn->error);
 
     // CHECK IF THERE IS ARTICLES
     if ($result->num_rows > 0){
         while($row = $result->fetch_assoc()){
             $user_id = $row['user_id'];
-            $readableDateTime = date("F d, Y g:i A",$row['up_timestamp']);
-            $row['date_time'] = $readableDateTime;
-            $row['body'] = htmlspecialchars_decode($row['body']);
+            if (isset($_GET['params'])) {
+                $params = explode(",",$_GET['params']);
+                if (array_search('up_timestamp', $params)!=""){
+                    $readableDateTime = date("F d, Y g:i A",$row['up_timestamp']);
+                    $row['date_time'] = $readableDateTime;
+                }
+                if (array_search('body', $params)!=""){
+                    $row['body'] = htmlspecialchars_decode($row['body']);
+                }
+            }
+            else {
+                $readableDateTime = date("F d, Y g:i A",$row['up_timestamp']);
+                $row['date_time'] = $readableDateTime;
+                $row['body'] = htmlspecialchars_decode($row['body']);
+            }
             $getUserSql = "SELECT id,fname,lname,course,dept FROM op_users WHERE id='$user_id' LIMIT 1";
             $getUserResult = $conn->query($getUserSql) or die($conn->error());
             if ($getUserResult->num_rows > 0){
@@ -100,13 +138,13 @@ elseif ($_SERVER['REQUEST_METHOD']=="PUT"){
     if ((isset($_PUT['access_token']))&&(isset($_PUT['title']))&&(isset($_PUT['body'])&&(isset($_PUT['status']))&&(isset($_PUT['category']))&&(isset($_PUT['article_id'])))){
         $access_token = htmlspecialchars($conn->real_escape_string($_PUT['access_token']));
         $sql = "SELECT * FROM op_tokens WHERE token='$access_token' LIMIT 1";
-        $result = $conn->query($sql);
+        $result = $conn->query($sql) or die ($conn->error);
         if ($result->num_rows > 0){
             $token = $result->fetch_assoc();
             $user_id = $token['user_id'];
             $article_id = htmlspecialchars($conn->real_escape_string($_PUT['article_id']));
             $sql = "SELECT * FROM op_articles WHERE id='$article_id' AND user_id='$user_id' LIMIT 1";
-            $result = $conn->query($sql);
+            $result = $conn->query($sql) or die ($conn->error);
             if ($result->num_rows > 0) {
                 $title = htmlspecialchars($conn->real_escape_string($_PUT['title']));
                 $status = htmlspecialchars($conn->real_escape_string($_PUT['status']));
@@ -114,7 +152,7 @@ elseif ($_SERVER['REQUEST_METHOD']=="PUT"){
                 $body = htmlspecialchars($conn->real_escape_string($_PUT['body']));
                 $time = time();
                 $sql = "UPDATE op_articles SET title='$title',status='$status',body='$body',category='$category',up_timestamp='$time' WHERE id='$article_id'";
-                if ($conn->query($sql)) {
+                if ($conn->query($sql) or die ($conn->error)) {
                     $response = array("message" => "Updated Successfully", "status" => "success_update");
                 }
                 else {
