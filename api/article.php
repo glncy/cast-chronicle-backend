@@ -15,34 +15,16 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
 
     // SPECIFIC ARTICLE
     if (isset($_GET['article_id'])){
+        $article_id = htmlspecialchars($conn->real_escape_string($_GET['article_id']));
         if (isset($_GET['access_token'])) {
             $access_token = htmlspecialchars($conn->real_escape_string($_GET['access_token']));
-            $sql = "SELECT * FROM op_tokens WHERE token='$access_token' LIMIT 1";
+            $sql = "SELECT user_id FROM op_tokens WHERE token='$access_token' LIMIT 1";
             $result = $conn->query($sql);
             if ($result->num_rows > 0){
                 $row = $result->fetch_assoc();
                 $user_id = $row['user_id'];
-                $sql = "SELECT role FROM op_users WHERE id='$user_id' LIMIT 1";
-                $result = $conn->query($sql);
-                if ($result->num_rows > 0) {
-                    $row = $result->fetch_assoc();
-                    if ($row['role'] == "admin") {
-                        $sql = "SELECT ".$params." FROM op_articles ".$categorySql." ORDER BY up_timestamp DESC";
-                        $continueIt = true;
-                    }
-                    elseif ($row['role'] == "writer") {
-                        $sql = "SELECT ".$params." FROM op_articles WHERE user_id='$user_id'".$categorySql." ORDER BY up_timestamp DESC";
-                        $continueIt = true;   
-                    }
-                    else {
-                        $continueIt = false;
-                        $response = array("message" => "Denied Access", "status" => "no_access");
-                    }
-                }
-                else {
-                    $continueIt = false;
-                    $response = array("message" => "Denied Access", "status" => "no_access");
-                } 
+                $sql = "SELECT * FROM op_articles WHERE user_id='$user_id' AND id='$article_id' LIMIT 1";
+                $continueIt = true;
             }
             else {
                 $continueIt = false;
@@ -50,8 +32,7 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
             }
         }
         else {
-            $article_id = htmlspecialchars($conn->real_escape_string($_GET['article_id']));
-            $sql = "SELECT * FROM op_articles WHERE status='published' AND id='$article_id' ORDER BY up_timestamp DESC";
+            $sql = "SELECT * FROM op_articles WHERE status='published' AND id='$article_id' LIMIT 1";
             $continueIt = true;
         }
     }
@@ -221,7 +202,6 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
             }
         }
     }
-
     showResponse($response);
 }
 

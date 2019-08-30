@@ -7,10 +7,12 @@ $pageSection = "edit";
 
 include('../functions.php');
 
+$article_id = $_GET['id'];
+
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-    CURLOPT_URL => baseURL()."/api/article.php?access_token=".$_COOKIE['access_token']."&params=id,status,title,user_id,up_timestamp",
+    CURLOPT_URL => baseURL()."/api/article.php?access_token=".$_COOKIE['access_token']."&article_id=".$article_id,
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => "",
     CURLOPT_MAXREDIRS => 10,
@@ -34,6 +36,9 @@ if ($err) {
         if ($obj['status']=="no_access") {
             header("Location: logout.php");
         }
+        elseif ($obj['status']=="no_content"){
+            header("Location: error/404.php");
+        }
     }
     else {
         $loopCnt = count($obj);   
@@ -47,43 +52,45 @@ include('../layout/header.php');
 <div class="row">
     <div class="col-sm-8">
         <div class="card mb-3">
-            <div class="card-header">
-                Compose Draft
-            </div>
             <div class="card-body">
                 <div class="form-group">
                     <label>Title</label>
-                    <input type="text" class="form-control" id="article_title">
+                    <input type="text" class="form-control" id="article_title" value="<?php echo $obj[0]['title']; ?>">
                 </div>
                 <div class="form-group">
                     <label>Body</label>
                     <div id="editor">
-                        <br/><br/><br/><br/><br/>
+                        <?php echo $obj[0]['body']; ?>
                     </div>
                 </div>
-                <button type="button" class="btn btn-success btn-sm float-right" onclick="confirmSubmit();" id="submitButton">Save Draft</button>
             </div>
         </div>
     </div>
     <div class="col-sm-4">
         <div class="card mb-3">
             <div class="card-header">
-                Approved
+                Actions
             </div>
             <div class="card-body">
+                <button type="button" class="btn btn-success btn btn-block" onclick="confirmSubmit();" id="submitButton">Save Draft</button>
+                <?php
+                    if (($obj[0]['status']=="draft")||($obj[0]['status']=="rejected")) {
+                ?>
+                <button type="button" class="btn btn-info btn btn-block" onclick="setForApproval();" id="approvalButton">Submit for Approval</button>
+                <?php
+                    }
+                    elseif ($obj[0]['status']=="pending") {
+                ?>
+                <button type="button" class="btn btn-info btn btn-block" onclick="setForApproval();" id="approvalButton">Update</button>
+                <?php
+                    }
+                    elseif ($obj[0]['status']=="published") {
+                ?>
                 <br/>
-            </div>
-            <div class="card-header">
-                Pending
-            </div>
-            <div class="card-body">
-                <br/>
-            </div>
-            <div class="card-header">
-                Drafts
-            </div>
-            <div class="card-body">
-                <br/>
+                <center>This Article is Live now. Once changes was Saved as Draft, it should be reviewed again to make it Live.</center>
+                <?php
+                    }
+                ?>
             </div>
         </div>
     </div>
