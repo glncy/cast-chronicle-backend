@@ -23,8 +23,17 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
             if ($result->num_rows > 0){
                 $row = $result->fetch_assoc();
                 $user_id = $row['user_id'];
-                $sql = "SELECT * FROM op_articles WHERE user_id='$user_id' AND id='$article_id' LIMIT 1";
-                $continueIt = true;
+                $sql = "SELECT role FROM op_users WHERE id='$user_id' LIMIT 1";
+                $result = $conn->query($sql);
+                $row = $result->fetch_assoc();
+                if ($row['role']=="admin") {
+                    $sql = "SELECT * FROM op_articles WHERE id='$article_id' LIMIT 1";
+                    $continueIt = true;
+                }
+                elseif ($row['role']=="writer") {
+                    $sql = "SELECT * FROM op_articles WHERE user_id='$user_id' AND id='$article_id' LIMIT 1";
+                    $continueIt = true;
+                }
             }
             else {
                 $continueIt = false;
@@ -250,21 +259,51 @@ elseif ($_SERVER['REQUEST_METHOD']=="PUT"){
         if ($result->num_rows > 0){
             $token = $result->fetch_assoc();
             $user_id = $token['user_id'];
-            $article_id = htmlspecialchars($conn->real_escape_string($_PUT['article_id']));
-            $sql = "SELECT * FROM op_articles WHERE id='$article_id' AND user_id='$user_id' LIMIT 1";
+            $sql = "SELECT role FROM op_users WHERE id='$user_id' LIMIT 1";
             $result = $conn->query($sql) or die ($conn->error);
-            if ($result->num_rows > 0) {
-                $title = htmlspecialchars($conn->real_escape_string($_PUT['title']));
-                $status = htmlspecialchars($conn->real_escape_string($_PUT['status']));
-                $category = htmlspecialchars($conn->real_escape_string($_PUT['category']));
-                $body = htmlspecialchars($conn->real_escape_string($_PUT['body']));
-                $time = time();
-                $sql = "UPDATE op_articles SET title='$title',status='$status',body='$body',category='$category',up_timestamp='$time' WHERE id='$article_id'";
-                if ($conn->query($sql) or die ($conn->error)) {
-                    $response = array("message" => "Updated Successfully", "status" => "success_update");
+            $row = $result->fetch_assoc();
+            if ($row['role']=="admin") {
+                $article_id = htmlspecialchars($conn->real_escape_string($_PUT['article_id']));
+                $sql = "SELECT * FROM op_articles WHERE id='$article_id' LIMIT 1";
+                $result = $conn->query($sql) or die ($conn->error);
+                if ($result->num_rows > 0) {
+                    $title = htmlspecialchars($conn->real_escape_string($_PUT['title']));
+                    $status = htmlspecialchars($conn->real_escape_string($_PUT['status']));
+                    $category = htmlspecialchars($conn->real_escape_string($_PUT['category']));
+                    $body = htmlspecialchars($conn->real_escape_string($_PUT['body']));
+                    $time = time();
+                    $sql = "UPDATE op_articles SET title='$title',status='$status',body='$body',category='$category',up_timestamp='$time' WHERE id='$article_id'";
+                    if ($conn->query($sql) or die ($conn->error)) {
+                        $response = array("message" => "Updated Successfully", "status" => "success_update");
+                    }
+                    else {
+                        $response = array("message" => "Failed to Update due to Server Error", "status" => "server_error");
+                    }
                 }
                 else {
-                    $response = array("message" => "Failed to Update due to Server Error", "status" => "server_error");
+                    $response = array("message" => "Denied Access", "status" => "no_access");
+                }
+            }
+            elseif ($row['role']=="writer") {
+                $article_id = htmlspecialchars($conn->real_escape_string($_PUT['article_id']));
+                $sql = "SELECT * FROM op_articles WHERE id='$article_id' AND user_id='$user_id' LIMIT 1";
+                $result = $conn->query($sql) or die ($conn->error);
+                if ($result->num_rows > 0) {
+                    $title = htmlspecialchars($conn->real_escape_string($_PUT['title']));
+                    $status = htmlspecialchars($conn->real_escape_string($_PUT['status']));
+                    $category = htmlspecialchars($conn->real_escape_string($_PUT['category']));
+                    $body = htmlspecialchars($conn->real_escape_string($_PUT['body']));
+                    $time = time();
+                    $sql = "UPDATE op_articles SET title='$title',status='$status',body='$body',category='$category',up_timestamp='$time' WHERE id='$article_id'";
+                    if ($conn->query($sql) or die ($conn->error)) {
+                        $response = array("message" => "Updated Successfully", "status" => "success_update");
+                    }
+                    else {
+                        $response = array("message" => "Failed to Update due to Server Error", "status" => "server_error");
+                    }
+                }
+                else {
+                    $response = array("message" => "Denied Access", "status" => "no_access");
                 }
             }
             else {

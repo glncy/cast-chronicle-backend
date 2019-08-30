@@ -445,6 +445,256 @@
 				}
 			}
 		}
+		elseif ($section=="admin-panel") {
+			if (isset($pageSection)){
+				if ($pageSection == "articles"){
+	?>
+	<script>
+		function openLink(id){
+			window.location.href = "<?php echo baseURL();?>admin/edit.php?id="+id;
+		}
+	</script>
+	<?php
+				}
+				else if ($pageSection == "edit"){
+	?>
+	<script>
+
+	function setReject(){
+		Swal.fire({
+			title: 'Are you sure?',
+			text: "This will be set as Reject.",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes'
+			}).then((result) => {
+			if (result.value) {
+				submitAsReject();
+			}
+		});
+	}
+
+	function setPublish(){
+		Swal.fire({
+			title: 'Are you sure?',
+			text: "This will be set as Approve and it will be Live.",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes'
+			}).then((result) => {
+			if (result.value) {
+				submitAsApproved();
+			}
+		});
+	}
+
+	function setUnpublish(){
+		Swal.fire({
+			title: 'Are you sure?',
+			text: "This will be set as Unpublished and it will be mark as Pending.",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes'
+			}).then((result) => {
+			if (result.value) {
+				submitAsUnpublish();
+			}
+		});
+	}
+
+	function submitAsReject(){	
+		var ifSubmitted = false;
+		var message = "";
+
+		var data = {
+			access_token: "<?php echo $_COOKIE['access_token']; ?>",
+			title: "<?php echo $conn->real_escape_string($obj[0]['title']); ?>",
+			body: "<?php echo $conn->real_escape_string($obj[0]['body']); ?>",
+			status: "rejected",
+			category: "<?php echo $obj[0]['category']; ?>",
+			article_id: "<?php echo $obj[0]['id']; ?>"
+		}
+
+		$.ajax({
+			url: "<?php echo baseURL(); ?>api/article.php",
+			type: "put",
+			data: data,
+			beforeSend: function(){
+				document.getElementById('rejectButton').innerHTML = "Setting It...";
+				document.getElementById('approveButton').setAttribute("disabled","");
+				document.getElementById('rejectButton').setAttribute("disabled","");
+			},
+			success: function(r){
+				var str = JSON.stringify(r);
+				var obj = JSON.parse(str);
+
+				if (obj.status == "success_update") {
+					ifSubmitted = true;
+					message = obj.message;
+				}
+				else {
+					message = obj.message;
+				}					
+			},
+			complete: function(){
+				if (ifSubmitted) {
+					setTimeout(function(){
+						Swal.fire(
+							message,
+							'',
+							'success'
+						)
+						document.getElementById('rejectButton').innerHTML = "Reject";
+						document.getElementById('rejectButton').removeAttribute("disabled");
+						document.getElementById('approveButton').removeAttribute("disabled");
+					}, 2000);	
+				}
+				else {
+					setTimeout(function(){
+						Swal.fire(
+							message,
+							'',
+							'warning'
+						)
+						document.getElementById('rejectButton').innerHTML = "Reject";
+						document.getElementById('rejectButton').removeAttribute("disabled");
+						document.getElementById('approveButton').removeAttribute("disabled");
+					}, 2000);
+				}
+			}
+		});
+	}
+
+	function submitAsApproved(){
+		var ifSubmitted = false;
+		var message = "";
+
+		var data = {
+			access_token: "<?php echo $_COOKIE['access_token']; ?>",
+			title: "<?php echo $conn->real_escape_string($obj[0]['title']); ?>",
+			body: "<?php echo $conn->real_escape_string($obj[0]['body']); ?>",
+			status: "published",
+			category: "<?php echo $obj[0]['category']; ?>",
+			article_id: "<?php echo $obj[0]['id']; ?>"
+		}
+
+		$.ajax({
+			url: "<?php echo baseURL(); ?>api/article.php",
+			type: "put",
+			data: data,
+			beforeSend: function(){
+				document.getElementById('approveButton').innerHTML = "Setting It...";
+				document.getElementById('approveButton').setAttribute("disabled","");
+				document.getElementById('rejectButton').setAttribute("disabled","");
+			},
+			success: function(r){
+				var str = JSON.stringify(r);
+				var obj = JSON.parse(str);
+
+				if (obj.status == "success_update") {
+					ifSubmitted = true;
+					message = obj.message;
+				}
+				else {
+					message = obj.message;
+				}					
+			},
+			complete: function(){
+				if (ifSubmitted) {
+					setTimeout(function(){
+						Swal.fire(
+							message,
+							'',
+							'success'
+						)
+						document.getElementById('approveButton').innerHTML = "Approve";
+						document.getElementById('rejectButton').removeAttribute("disabled");
+						document.getElementById('approveButton').removeAttribute("disabled");
+					}, 2000);	
+				}
+				else {
+					setTimeout(function(){
+						Swal.fire(
+							message,
+							'',
+							'warning'
+						)
+						document.getElementById('approveButton').innerHTML = "Approve";
+						document.getElementById('rejectButton').removeAttribute("disabled");
+						document.getElementById('approveButton').removeAttribute("disabled");
+					}, 2000);
+				}
+			}
+		});
+	}
+
+	function submitAsUnpublish(){
+		var ifSubmitted = false;
+		var message = "";
+
+		var data = {
+			access_token: "<?php echo $_COOKIE['access_token']; ?>",
+			title: "<?php echo $conn->real_escape_string($obj[0]['title']); ?>",
+			body: "<?php echo $conn->real_escape_string($obj[0]['body']); ?>",
+			status: "pending",
+			category: "<?php echo $obj[0]['category']; ?>",
+			article_id: "<?php echo $obj[0]['id']; ?>"
+		}
+
+		$.ajax({
+			url: "<?php echo baseURL(); ?>api/article.php",
+			type: "put",
+			data: data,
+			beforeSend: function(){
+				document.getElementById('unpublishButton').innerHTML = "Setting It...";
+				document.getElementById('unpublishButton').setAttribute("disabled","");
+			},
+			success: function(r){
+				var str = JSON.stringify(r);
+				var obj = JSON.parse(str);
+
+				if (obj.status == "success_update") {
+					ifSubmitted = true;
+					message = obj.message;
+				}
+				else {
+					message = obj.message;
+				}					
+			},
+			complete: function(){
+				if (ifSubmitted) {
+					setTimeout(function(){
+						Swal.fire(
+							message,
+							'',
+							'success'
+						);
+						window.location.href = "<?php echo baseURL();?>admin/edit.php?id=<?php echo $obj[0]['id']; ?>";
+					}, 2000);	
+				}
+				else {
+					setTimeout(function(){
+						Swal.fire(
+							message,
+							'',
+							'warning'
+						);
+					}, 2000);
+				}
+			}
+		});
+	}
+	</script>
+	<?php
+				}
+			}
+		}
 	}
 	?>
 </body>

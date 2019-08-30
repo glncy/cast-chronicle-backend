@@ -1,7 +1,7 @@
 <?php
 include('process/auth.php');
 
-$section = "writers-panel";
+$section = "admin-panel";
 
 $pageSection = "edit";
 
@@ -46,6 +46,7 @@ if ($err) {
 }
 
 // HEADER
+include('../config/connection.php');
 include('../layout/header.php');
 ?>
 
@@ -53,15 +54,12 @@ include('../layout/header.php');
     <div class="col-sm-8">
         <div class="card mb-3">
             <div class="card-body">
-                <div class="form-group">
-                    <label>Title</label>
-                    <input type="text" class="form-control" id="article_title" value="<?php echo $obj[0]['title']; ?>">
-                </div>
-                <div class="form-group">
-                    <label>Body</label>
-                    <div id="editor">
-                        <?php echo $obj[0]['body']; ?>
-                    </div>
+                <h2>
+                    <strong><?php echo $obj[0]['title']; ?></strong>
+                </h2>
+                <hr/>
+                <div id="editor">
+                    <?php echo $obj[0]['body']; ?>
                 </div>
             </div>
         </div>
@@ -72,22 +70,16 @@ include('../layout/header.php');
                 Actions
             </div>
             <div class="card-body">
-                <button type="button" class="btn btn-success btn btn-block" onclick="confirmSubmit();" id="submitButton">Save Draft</button>
                 <?php
-                    if (($obj[0]['status']=="draft")||($obj[0]['status']=="rejected")) {
+                    if (($obj[0]['status']=="pending")||($obj[0]['status']=="rejected")) {
                 ?>
-                <button type="button" class="btn btn-info btn btn-block" onclick="setForApproval();" id="approvalButton">Submit for Approval</button>
-                <?php
-                    }
-                    elseif ($obj[0]['status']=="pending") {
-                ?>
-                <button type="button" class="btn btn-info btn btn-block" onclick="setForApproval();" id="approvalButton">Update</button>
+                <button type="button" class="btn btn-success btn btn-block" onclick="setPublish();" id="approveButton">Approve and Publish</button>
+                <button type="button" class="btn btn-danger btn btn-block" onclick="setReject();" id="rejectButton">Reject</button>
                 <?php
                     }
                     elseif ($obj[0]['status']=="published") {
                 ?>
-                <br/>   
-                <center>This Article is Live now. Once changes was Saved as Draft, it should be reviewed again to make it Live.</center>
+                <button type="button" class="btn btn-info btn btn-block" onclick="setUnpublish();" id="unpublishButton">Unpublish</button>
                 <?php
                     }
                 ?>
