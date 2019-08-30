@@ -10,11 +10,52 @@ header('Content-Type: application/json');
 
 // FETCHING POST
 if ($_SERVER['REQUEST_METHOD']=="GET"){
+
+    $continueIt = false;
+
     // SPECIFIC ARTICLE
     if (isset($_GET['article_id'])){
-        $article_id = htmlspecialchars($conn->real_escape_string($_GET['article_id']));
-        $sql = "SELECT * FROM op_articles WHERE status='published' AND id='$article_id' ORDER BY up_timestamp DESC";
+        if (isset($_GET['access_token'])) {
+            $access_token = htmlspecialchars($conn->real_escape_string($_GET['access_token']));
+            $sql = "SELECT * FROM op_tokens WHERE token='$access_token' LIMIT 1";
+            $result = $conn->query($sql);
+            if ($result->num_rows > 0){
+                $row = $result->fetch_assoc();
+                $user_id = $row['user_id'];
+                $sql = "SELECT role FROM op_users WHERE id='$user_id' LIMIT 1";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    $row = $result->fetch_assoc();
+                    if ($row['role'] == "admin") {
+                        $sql = "SELECT ".$params." FROM op_articles ".$categorySql." ORDER BY up_timestamp DESC";
+                        $continueIt = true;
+                    }
+                    elseif ($row['role'] == "writer") {
+                        $sql = "SELECT ".$params." FROM op_articles WHERE user_id='$user_id'".$categorySql." ORDER BY up_timestamp DESC";
+                        $continueIt = true;   
+                    }
+                    else {
+                        $continueIt = false;
+                        $response = array("message" => "Denied Access", "status" => "no_access");
+                    }
+                }
+                else {
+                    $continueIt = false;
+                    $response = array("message" => "Denied Access", "status" => "no_access");
+                } 
+            }
+            else {
+                $continueIt = false;
+                $response = array("message" => "Denied Access", "status" => "no_access");
+            }
+        }
+        else {
+            $article_id = htmlspecialchars($conn->real_escape_string($_GET['article_id']));
+            $sql = "SELECT * FROM op_articles WHERE status='published' AND id='$article_id' ORDER BY up_timestamp DESC";
+            $continueIt = true;
+        }
     }
+    
     // START AND LIMIT GETTING ARTICLE
     elseif ((isset($_GET['start']))&&(isset($_GET['limit']))) {
         $start = $conn->real_escape_string($_GET['start']);
@@ -29,71 +70,158 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
         if (isset($_GET['params'])) {
             $params = $conn->real_escape_string($_GET['params']);
             $sql = "SELECT ".$params." FROM op_articles WHERE status='published'".$categorySql." AND ".$start." >= up_timestamp ORDER BY up_timestamp DESC LIMIT ".$limit;
+            $continueIt = true;
         }
         else {
             $sql = "SELECT * FROM op_articles WHERE status='published'".$categorySql." AND ".$start." >= up_timestamp ORDER BY up_timestamp DESC LIMIT ".$limit;
+            $continueIt = true;
         }
     }
     // ALL ARTICLE
     else {
         if (isset($_GET['category'])) {
-            $category = $conn->real_escape_string($_GET['category']);
-            $categorySql = " AND category='".$category."'";;
+            if (isset($_GET['access_token'])) {
+                $category = $conn->real_escape_string($_GET['category']);
+                $categorySql = "WHERE category='".$category."'";
+            }
+            else {
+                $category = $conn->real_escape_string($_GET['category']);
+                $categorySql = " AND category='".$category."'";
+            }
         }
         else {
             $categorySql = "";
         }
+
         if (isset($_GET['params'])) {
             $params = $conn->real_escape_string($_GET['params']);
-            $sql = "SELECT ".$params." FROM op_articles WHERE status='published'".$categorySql." ORDER BY up_timestamp DESC";
-        }
-        else {
-            $sql = "SELECT * FROM op_articles WHERE status='published'".$categorySql." ORDER BY up_timestamp DESC";
-        }
-    }
-    $result = $conn->query($sql) or die ($conn->error);
-
-    // CHECK IF THERE IS ARTICLES
-    if ($result->num_rows > 0){
-        while($row = $result->fetch_assoc()){
-            $user_id = $row['user_id'];
-            if (isset($_GET['params'])) {
-                $params = explode(",",$_GET['params']);
-                if (array_search('up_timestamp', $params)!=""){
-                    $readableDateTime = date("F d, Y g:i A",$row['up_timestamp']);
-                    $row['date_time'] = $readableDateTime;
+            if (isset($_GET['access_token'])) {
+                $access_token = htmlspecialchars($conn->real_escape_string($_GET['access_token']));
+                $sql = "SELECT * FROM op_tokens WHERE token='$access_token' LIMIT 1";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0){
+                    $row = $result->fetch_assoc();
+                    $user_id = $row['user_id'];
+                    $sql = "SELECT role FROM op_users WHERE id='$user_id' LIMIT 1";
+                    $result = $conn->query($sql);
+                    if ($result->num_rows > 0) {
+                        $row = $result->fetch_assoc();
+                        if ($row['role'] == "admin") {
+                            $sql = "SELECT ".$params." FROM op_articles ".$categorySql." ORDER BY up_timestamp DESC";
+                            $continueIt = true;
+                        }
+                        elseif ($row['role'] == "writer") {
+                            $sql = "SELECT ".$params." FROM op_articles WHERE user_id='$user_id'".$categorySql." ORDER BY up_timestamp DESC";
+                            $continueIt = true;   
+                        }
+                        else {
+                            $continueIt = false;
+                            $response = array("message" => "Denied Access", "status" => "no_access");
+                        }
+                    }
+                    else {
+                        $continueIt = false;
+                        $response = array("message" => "Denied Access", "status" => "no_access");
+                    }   
                 }
-                if (array_search('body', $params)!=""){
-                    $row['body'] = htmlspecialchars_decode($row['body']);
+                else {
+                    $continueIt = false;
+                    $response = array("message" => "Denied Access", "status" => "no_access");
                 }
             }
             else {
-                $readableDateTime = date("F d, Y g:i A",$row['up_timestamp']);
-                $row['date_time'] = $readableDateTime;
-                $row['body'] = htmlspecialchars_decode($row['body']);
+                $sql = "SELECT ".$params." FROM op_articles WHERE status='published'".$categorySql." ORDER BY up_timestamp DESC";
+                $continueIt = true;
             }
-            $getUserSql = "SELECT id,fname,lname,course,dept FROM op_users WHERE id='$user_id' LIMIT 1";
-            $getUserResult = $conn->query($getUserSql) or die($conn->error());
-            if ($getUserResult->num_rows > 0){
-                unset($row['user_id']);
-                $user_details = $getUserResult->fetch_assoc();
-                $row['user_details'] = $user_details;
-            }
-            $response[] = $row;
         }
-    }
-    else {
-        $response = array("message" => "No Articles Available", "status" => "no_content");
+        else {
+            if (isset($_GET['access_token'])) {
+                $access_token = htmlspecialchars($conn->real_escape_string($_GET['access_token']));
+                $sql = "SELECT * FROM op_tokens WHERE token='$access_token' LIMIT 1";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0){
+                    $row = $result->fetch_assoc();
+                    $user_id = $row['user_id'];
+                    $sql = "SELECT role FROM op_users WHERE id='$user_id' LIMIT 1";
+                    $result = $conn->query($sql) or die ($conn->error);
+                    if ($result->num_rows > 0) {
+                        $row = $result->fetch_assoc();
+                        if ($row['role'] == "admin") {
+                            $sql = "SELECT * FROM op_articles".$categorySql." ORDER BY up_timestamp DESC";
+                            $continueIt = true;
+                        }
+                        elseif ($row['role'] == "writer") {
+                            $sql = "SELECT * FROM op_articles WHERE user_id='$user_id'".$categorySql." ORDER BY up_timestamp DESC";
+                            $continueIt = true; 
+                        }
+                        else {
+                            $continueIt = false;
+                            $response = array("message" => "Denied Access", "status" => "no_access");
+                        }
+                    }
+                    else {
+                        $continueIt = false;
+                        $response = array("message" => "Denied Access", "status" => "no_access");
+                    }   
+                }
+                else {
+                    $continueIt = false;
+                    $response = array("message" => "Denied Access", "status" => "no_access");
+                }
+            }
+            else {
+                $sql = "SELECT * FROM op_articles WHERE status='published'".$categorySql." ORDER BY up_timestamp DESC";
+                $continueIt = true;
+            }
+        }
     }
 
-    if (isset($_GET['count'])){
-        if ($_GET['count']=="true") {
-            $response[] = count($response);
+    if ($continueIt) {
+        $result = $conn->query($sql) or die ($conn->error);
+
+        // CHECK IF THERE IS ARTICLES
+        if ($result->num_rows > 0){
+            while($row = $result->fetch_assoc()){
+                $user_id = $row['user_id'];
+                if (isset($_GET['params'])) {
+                    $params = explode(",",$_GET['params']);
+                    if (array_search('up_timestamp', $params)!=""){
+                        $readableDateTime = date("F d, Y g:i A",$row['up_timestamp']);
+                        $row['date_time'] = $readableDateTime;
+                    }
+                    if (array_search('body', $params)!=""){
+                        $row['body'] = htmlspecialchars_decode($row['body']);
+                    }
+                }
+                else {
+                    $readableDateTime = date("F d, Y g:i A",$row['up_timestamp']);
+                    $row['date_time'] = $readableDateTime;
+                    $row['body'] = htmlspecialchars_decode($row['body']);
+                }
+                $getUserSql = "SELECT id,fname,lname,course,dept FROM op_users WHERE id='$user_id' LIMIT 1";
+                $getUserResult = $conn->query($getUserSql) or die($conn->error());
+                if ($getUserResult->num_rows > 0){
+                    unset($row['user_id']);
+                    $user_details = $getUserResult->fetch_assoc();
+                    $row['user_details'] = $user_details;
+                }
+                $response[] = $row;
+            }
         }
-        elseif ($_GET['count']=="only_count") {
-            $response = array("article_count" => count($response));
+        else {
+            $response = array("message" => "No Articles Available", "status" => "no_content");
+        }
+    
+        if (isset($_GET['count'])){
+            if ($_GET['count']=="true") {
+                $response[] = count($response);
+            }
+            elseif ($_GET['count']=="only_count") {
+                $response = array("article_count" => count($response));
+            }
         }
     }
+
     showResponse($response);
 }
 

@@ -89,8 +89,18 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbar">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item active"><a href="<?php echo baseURL(); ?>" class="nav-link">Dashboard</a></li>
-					<li class="nav-item"><a href="" class="nav-link">My Articles</a></li>
+					<?php
+					if ($pageSection == "dashboard") {
+						$dashboard = " active";
+						$article = "";
+					}
+					else {
+						$dashboard = "";
+						$article = " active";
+					}
+					?>
+					<li class="nav-item<?php echo $dashboard;?>"><a href="<?php echo baseURL(); ?>writer/dashboard.php" class="nav-link">Dashboard</a></li>
+					<li class="nav-item<?php echo $article;?>"><a href="<?php echo baseURL(); ?>writer/articles.php" class="nav-link">My Articles</a></li>
 				</ul>
 				<ul class="navbar-nav">
 					<li class="nav-item dropdown">
@@ -135,8 +145,8 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbar">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item active"><a href="<?php echo baseURL(); ?>" class="nav-link">Dashboard</a></li>
-					<li class="nav-item"><a href="" class="nav-link">Articles</a></li>
+					<li class="nav-item active"><a href="<?php echo baseURL(); ?>admin/dashboard.php" class="nav-link">Dashboard</a></li>
+					<li class="nav-item"><a href="<?php echo baseURL(); ?>admin/articles.php" class="nav-link">Articles</a></li>
 					<li class="nav-item"><a href="" class="nav-link">Writers</a></li>
 					<li class="nav-item"><a href="" class="nav-link">Events</a></li>
 				</ul>
@@ -159,5 +169,5 @@
 	}
 	?>
 	<section>
-		<div class="container" style="background: rgba(0,0,0,0.5)">
+		<div class="container" style="background: rgba(0,0,0,0.5); min-height: 50vh;">
 		<br/>

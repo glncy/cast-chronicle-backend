@@ -25,7 +25,7 @@ if (isset($_POST['login'])){
         CURLOPT_FOLLOWLOCATION => false,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_POSTFIELDS => "studentId=".$studentId."&pw=".$pw,
+        CURLOPT_POSTFIELDS => "studentId=".$studentId."&pw=".$pw."&role=writer",
         CURLOPT_HTTPHEADER => array(
         "Content-Type: application/x-www-form-urlencoded"
         ),

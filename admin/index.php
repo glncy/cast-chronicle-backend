@@ -11,21 +11,49 @@ include('../config/connection.php');
 $section = "login";
 
 if (isset($_POST['login'])){
-    $username = $conn->real_escape_string($_POST['username']);
+    $studentId = $conn->real_escape_string($_POST['studentId']);
     $pw = $conn->real_escape_string($_POST['pw']);
     
-    $pw_hash = md5("psu".$pw."psu");
+    $curl = curl_init();
 
-    $sql = "SELECT * FROM op_users WHERE username='$username' AND pw='$pw_hash' AND role='admin'";
-    $result = $conn->query($sql);
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => baseURL()."/api/auth.php",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => false,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS => "studentId=".$studentId."&pw=".$pw."&role=admin",
+        CURLOPT_HTTPHEADER => array(
+        "Content-Type: application/x-www-form-urlencoded"
+        ),
+    ));
 
-    if ($result->num_rows > 0){
-        $row = $result->fetch_assoc();
-        $_SESSION['admin_id']=$row['id'];
-        header("Location: index.php");
-    }
-    else {
-        $status = "Incorrect Credentials.";
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+
+    curl_close($curl);
+
+    if ($err) {
+        echo "cURL Error #:" . $err;
+    } else {
+        $obj = json_decode($response, true);
+
+        if ($obj[0]['status']!="invalid_login") {
+
+            $access_token = $obj[0]['access_token'];
+            $expiration = $obj[0]['expiration'];
+
+            setcookie("access_token", $access_token, $expiration, "/");
+            $_SESSION['admin_id'] = $obj[1]['id'];    
+
+            header("Location: dashboard.php");
+        }
+        else {
+            $status = $obj[0]['message'];
+        }
     }
 }
 
@@ -37,23 +65,24 @@ include('../layout/header.php');
         <div data-aos="fade-right">
             <div class="card text-white bg-dark mb-3" style="margin-top: 20%; box-shadow: 0px 0px 10px white;">
                 <div class="card-body">
-                <center><img src="<?php echo baseURL(); ?>/img/logo-ccnp.png" class="img-fluid" style="-webkit-filter:drop-shadow(3px 3px 2px rgba(0,0,0,1));"></center>
+                    <center><img src="<?php echo baseURL(); ?>/img/logo-ccnp.png" class="img-fluid" style="-webkit-filter:drop-shadow(3px 3px 2px rgba(0,0,0,1));"></center>
                     <hr/>
                     <h4 class="card-title">
-                        <center>Admin Panel</center>
+                        <center>Admin's Panel</center>
                     </h4>
                     <hr/>
                     <?php
                     if (isset($status)) {
                     ?>
                     <center><span class="badge badge-pill badge-danger p-3"><?php echo $status;?></span></center>
+                    <hr/>
                     <?php
                     }
                     ?>
                     <form method="POST">
                         <div class="form-group">
-                            <label for="">Username</label>
-                            <input type="text" class="form-control" name="username">
+                            <label for="">Student ID / Username</label>
+                            <input type="text" class="form-control" name="studentId">
                         </div>
                         <div class="form-group">
                             <label for="">Password</label>

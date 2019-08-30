@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
         if ($result->num_rows > 0){
             $token = $result->fetch_assoc();
             $user_id = $token['user_id'];
-            $sql = "SELECT id,fname,lname,course,dept FROM op_users WHERE id='$user_id' LIMIT 1";
+            $sql = "SELECT id,fname,lname,course,dept,role FROM op_users WHERE id='$user_id' LIMIT 1";
             $result = $conn->query($sql);
             if ($result->num_rows > 0) {
                 $response = $result->fetch_assoc();
@@ -61,7 +61,20 @@ elseif ($_SERVER['REQUEST_METHOD']=="POST") {
     if ((isset($_POST['studentId']))&&(isset($_POST['pw']))){
         $studentId = htmlspecialchars($conn->real_escape_string($_POST['studentId']));
         $pw = md5($salt.$_POST['pw']);
-        $sql = "SELECT id,fname,lname,studentId,role,course,dept FROM op_users WHERE studentId='$studentId' AND pw='$pw' LIMIT 1";
+        if (isset($_POST['role'])) {
+            if ($_POST['role'] == "admin") {
+                $sql = "SELECT id,fname,lname,studentId,role,course,dept FROM op_users WHERE studentId='$studentId' AND pw='$pw' AND role='admin' LIMIT 1";            
+            }
+            elseif ($_POST['role'] == "writer") {
+                $sql = "SELECT id,fname,lname,studentId,role,course,dept FROM op_users WHERE studentId='$studentId' AND pw='$pw' AND (role='admin' OR role='writer') LIMIT 1";                            
+            }
+            else {
+                $sql = "SELECT id,fname,lname,studentId,role,course,dept FROM op_users WHERE studentId='$studentId' AND pw='$pw' LIMIT 1";
+            }
+        }
+        else {
+            $sql = "SELECT id,fname,lname,studentId,role,course,dept FROM op_users WHERE studentId='$studentId' AND pw='$pw' LIMIT 1";
+        }
         $result = $conn->query($sql);
         if ($result->num_rows > 0) {
             $response = array();
@@ -79,7 +92,17 @@ elseif ($_SERVER['REQUEST_METHOD']=="POST") {
             }
         }
         else {
-            $response[] = array("message" => "Invalid Student ID or Password", "status" => "invalid_login");
+            if (isset($_POST['role'])) {
+                if ($_POST['role'] == "admin"){
+                    $response[] = array("message" => "Invalid Student ID / Username or Password", "status" => "invalid_login");
+                }
+                elseif ($_POST['role'] == "writer"){
+                    $response[] = array("message" => "Invalid Student ID or Password", "status" => "invalid_login");
+                }
+            }
+            else {
+                $response[] = array("message" => "Invalid Student ID or Password", "status" => "invalid_login");
+            }
             //$response = array("student_info" => "not_available");
         }
     }

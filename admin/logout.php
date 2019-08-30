@@ -1,4 +1,6 @@
 <?php
 session_start();
-unset($_SESSION['admin_id']);
+session_destroy();
+unset($_COOKIE['access_token']);
+setcookie("access_token", '', time() - 3600);
 header("Location: index.php");
