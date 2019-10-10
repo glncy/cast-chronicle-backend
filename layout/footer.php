@@ -1,6 +1,5 @@
 		<div>
 	</section>
-	<script type="text/javascript" src="<?= baseURL(); ?>js/jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="<?= baseURL(); ?>js/popper.min.js"></script>
 	<script type="text/javascript" src="<?= baseURL(); ?>js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="<?= baseURL(); ?>js/aos.js"></script>
@@ -32,6 +31,16 @@
 			}
 		});
 
+		function getImage(){
+			var someimage = document.getElementById('editor');
+			var myimg = someimage.getElementsByTagName('img')[0];
+			if (typeof myimg === "undefined") {
+				return "";
+			} else {
+				return myimg.src;
+			}
+		}
+
 		function confirmSubmit(){
 			var ifSubmitted = false;
 			var message = "";
@@ -41,6 +50,7 @@
 					access_token: "<?php echo $_COOKIE['access_token']; ?>",
 					title: document.getElementById("article_title").value,
 					body: quillGetHTML(delta),
+					img: getImage(),
 					status: "draft",
 					category: ""
 				}
@@ -175,6 +185,7 @@
 					access_token: "<?php echo $_COOKIE['access_token']; ?>",
 					title: document.getElementById("article_title").value,
 					body: quillGetHTML(delta),
+					img: getImage(),
 					status: "draft",
 					category: "",
 					article_id: "<?php echo $obj[0]['id']; ?>"
@@ -269,6 +280,7 @@
 					access_token: "<?php echo $_COOKIE['access_token']; ?>",
 					title: document.getElementById("article_title").value,
 					body: quillGetHTML(delta),
+					img: getImage(),
 					status: "pending",
 					category: "",
 					article_id: "<?php echo $obj[0]['id']; ?>"
@@ -340,10 +352,30 @@
 			}
 		}
 
+		function getImage(){
+			var someimage = document.getElementById('editor');
+			var myimg = someimage.getElementsByTagName('img')[0];
+			if (typeof myimg === "undefined") {
+				return "";
+			} else {
+				return myimg.src;
+			}
+		}
+
 		<?php
 			}
 			elseif ($obj[0]['status']=="published"){
 		?>
+
+		function getImage(){
+			var someimage = document.getElementById('editor');
+			var myimg = someimage.getElementsByTagName('img')[0];
+			if (typeof myimg === "undefined") {
+				return "";
+			} else {
+				return myimg.src;
+			}
+		}
 
 		function confirmSubmit(){
 			Swal.fire({
@@ -371,6 +403,7 @@
 					title: document.getElementById("article_title").value,
 					body: quillGetHTML(delta),
 					status: "draft",
+					img: getImage(),
 					category: "",
 					article_id: "<?php echo $obj[0]['id']; ?>"
 				}
@@ -456,14 +489,103 @@
 	</script>
 	<?php
 				}
-				else if ($pageSection == "edit"){
+				elseif ($pageSection == "edit"){
 	?>
 	<script>
+	window.onload = getRemarks();
+
+	function deleteRemark(id){
+		if(confirm("Delete Remarks?")){
+			var data = {
+				id: id
+			}
+
+			$.ajax({
+				url: "<?php echo baseURL(); ?>api/remark.php",
+				type: "delete",
+				data: data,
+				success: function(r){
+					var str = JSON.stringify(r);
+					var obj = JSON.parse(str);
+					if (obj.status == "success_delete"){
+						alert("Deleted Remarks!");
+						getRemarks();
+					}
+					else {
+						alert("Server Error!");
+					}
+				}
+			});
+		}
+		else {
+			alert("Cancelled.");
+		}
+	}
+
+	function addRemarks() {
+		if (document.getElementById('remarksBody').value != ""){
+			var data = {
+				article_id: "<?php echo $obj[0]['id']; ?>",
+				remarks: document.getElementById('remarksBody').value
+			}
+
+			$.ajax({
+				url: "<?php echo baseURL(); ?>api/remark.php",
+				type: "post",
+				data: data,
+				success: function(r){
+					var str = JSON.stringify(r);
+					var obj = JSON.parse(str);
+					if (obj.status == "success_add"){
+						alert("Added Remarks!");
+						getRemarks();
+					}
+					else {
+						alert("Server Error!");
+					}
+				}
+			});
+		}
+		else {
+			alert("Please Insert Remarks.");
+		}
+	}
+
+	function getRemarks() {
+		var data = {
+			article_id: "<?php echo $obj[0]['id']; ?>"
+		}
+
+		$.ajax({
+			url: "<?php echo baseURL(); ?>api/remark.php",
+			type: "get",
+			data: data,
+			success: function(r){
+				var str = JSON.stringify(r);
+				var obj = JSON.parse(str);
+				if (typeof obj[0].status === "undefined") {
+					var displayRemarks = "";
+					var loopCnt = obj.length;
+					var loop = 0;
+					displayRemarks = "<ol>"
+					while (loop < loopCnt) {
+						displayRemarks += "<li>"+obj[loop].body+" <button type=\"button\"class=\"btn btn-sm btn-danger\" onclick=\"deleteRemark("+obj[loop].id+")\">REMOVE</button></li>";
+						loop++;
+					}
+					displayRemarks += "</ol>";
+					document.getElementById('showRemarks').innerHTML = displayRemarks;
+				}
+				else {
+					document.getElementById('showRemarks').innerHTML = "No Remarks";
+				}
+			}
+		});
+	}
 
 	function setReject(){
 		Swal.fire({
 			title: 'Are you sure?',
-			text: "This will be set as Reject.",
+			text: "This will be set as Copyread.",
 			type: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: '#3085d6',
@@ -550,9 +672,10 @@
 							'',
 							'success'
 						)
-						document.getElementById('rejectButton').innerHTML = "Reject";
+						document.getElementById('rejectButton').innerHTML = "Copyread";
 						document.getElementById('rejectButton').removeAttribute("disabled");
 						document.getElementById('approveButton').removeAttribute("disabled");
+						
 					}, 2000);	
 				}
 				else {
@@ -690,6 +813,41 @@
 			}
 		});
 	}
+	</script>
+	<?php
+				}
+				elseif ($pageSection == 'writers'){
+	?>
+	<script type="text/javascript">
+		$(window).ready(function(){
+			$("#table").DataTable({
+				"ajax" : {	
+					"url" : "<?= baseURL(); ?>api/user.php",
+					"dataSrc": ""
+				},
+				"columns" : [
+					{ data : "studentId"},
+					{ data : "fname"},
+					{ data : "lname"},
+					{ data : "role"},
+					{ data : "id" , 
+						render : function (data, type, row) {
+							if (row.role == "writer") {
+								return '<button class="btn btn-danger btn-sm" onclick="change_role(\''+row.id+'\',\'student\')">Disable Writer</button>';
+							}
+							else {
+								return '<button class="btn btn-info btn-sm" onclick="change_role(\''+row.id+'\',\'writer\')">Enable Writer</button>';
+							}
+						}
+					}
+				]
+			});
+		});
+
+		function change_role(id,role) {
+			window.location.href = "<?= baseURL(); ?>admin/process/change_role.php?id="+id+"&role="+role;
+		}
+
 	</script>
 	<?php
 				}

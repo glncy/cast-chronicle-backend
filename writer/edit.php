@@ -92,6 +92,50 @@ include('../layout/header.php');
                     }
                 ?>
             </div>
+            <div class="card-header">
+                Remarks
+            </div>
+            <div class="card-body">
+            <?php
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => baseURL()."/api/remark.php?article_id=".$article_id,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => false,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "GET",
+            ));
+            
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            
+            curl_close($curl);
+
+            if ($err) {
+                echo "cURL Error #:" . $err;
+            } else {
+                $objRemark = json_decode($response, true);
+            
+                if (isset($objRemark[0]['status'])){
+                    echo "No Remarks";
+                }
+                else {
+                    $loopCnt = count($objRemark);
+                    $loop = 0;
+                    echo "<ol>";
+                    while ($loop < $loopCnt){
+                        echo "<li>".$objRemark[$loop]['body']."</li>";
+                        $loop++;
+                    }
+                    echo "</ol>";
+                }
+            }
+            ?>
+            </div>
         </div>
     </div>
 </div>

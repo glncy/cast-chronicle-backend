@@ -8,6 +8,9 @@
 	<link rel="stylesheet" type="text/css" href="<?= baseURL(); ?>css/aos.css">
 	<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 	<link rel="shortcut icon" href="<?php echo baseURL(); ?>/img/logo-cc-black.png" type="image/png">
+	<script type="text/javascript" src="<?= baseURL(); ?>js/jquery-3.3.1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?= baseURL(); ?>css/datatables.min.css">
+	<script type="text/javascript" src="<?= baseURL(); ?>js/datatables.min.js"></script>
 	<title>Cast Chronicles</title>
 	<script type="text/javascript" src="<?= baseURL(); ?>js/sweetalert2@8.js"></script>
 	<style>
@@ -21,6 +24,17 @@
 		min-height: 50vh;
 		min-width: 100%;
 	}
+	<?php
+		if((isset($section))&&(isset($pageSection))){
+			if(($section=="admin-panel")&&($pageSection=="edit")){
+	?>
+	p > img{
+		width: 100%;
+	}
+	<?php
+			}
+		}
+	?>
 	</style>
 </head>
 <body>
@@ -147,7 +161,7 @@
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active"><a href="<?php echo baseURL(); ?>admin/dashboard.php" class="nav-link">Dashboard</a></li>
 					<li class="nav-item"><a href="<?php echo baseURL(); ?>admin/articles.php" class="nav-link">Articles</a></li>
-					<li class="nav-item"><a href="" class="nav-link">Writers</a></li>
+					<li class="nav-item"><a href="<?php echo baseURL(); ?>admin/writers.php" class="nav-link">Writers</a></li>
 					<li class="nav-item"><a href="" class="nav-link">Events</a></li>
 				</ul>
 				<ul class="navbar-nav">

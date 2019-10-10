@@ -216,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
 
 // NEW POST
 elseif ($_SERVER['REQUEST_METHOD']=="POST"){
-    if ((isset($_POST['access_token']))&&(isset($_POST['title']))&&(isset($_POST['body'])&&(isset($_POST['status']))&&(isset($_POST['category'])))){
+    if ((isset($_POST['access_token']))&&(isset($_POST['title']))&&(isset($_POST['body']))&&(isset($_POST['status']))&&(isset($_POST['category']))&&(isset($_POST['img']))){
         $access_token = htmlspecialchars($conn->real_escape_string($_POST['access_token']));
         $sql = "SELECT * FROM op_tokens WHERE token='$access_token' LIMIT 1";
         $result = $conn->query($sql);
@@ -227,8 +227,9 @@ elseif ($_SERVER['REQUEST_METHOD']=="POST"){
             $category = htmlspecialchars($conn->real_escape_string($_POST['category']));
             $status = htmlspecialchars($conn->real_escape_string($_POST['status']));
             $body = htmlspecialchars($conn->real_escape_string($_POST['body']));
+            $img = htmlspecialchars($conn->real_escape_string($_POST['img']));
             $time = time();
-            $sql = "INSERT INTO op_articles (user_id,title,body,category,status,up_timestamp) VALUES ('$user_id','$title','$body','$category','$status','$time')";
+            $sql = "INSERT INTO op_articles (user_id,title,body,category,status,up_timestamp,img) VALUES ('$user_id','$title','$body','$category','$status','$time','$img')";
             if ($conn->query($sql) or die ($conn->error)) {
                 $response = array("message" => "Added Successfully", "status" => "success_add");
             }
@@ -241,7 +242,7 @@ elseif ($_SERVER['REQUEST_METHOD']=="POST"){
         }
     }
     else{
-        $response = array("message" => "Required Parameters (access_token,title,body,category,status)", "status" => "no_parameters");
+        $response = array("message" => "Required Parameters (access_token,title,body,category,status,img)", "status" => "no_parameters");
     }
     showResponse($response);
 }
@@ -252,7 +253,7 @@ elseif ($_SERVER['REQUEST_METHOD']=="PUT"){
     $_PUT = array();
     parse_str($data,$_PUT);
 
-    if ((isset($_PUT['access_token']))&&(isset($_PUT['title']))&&(isset($_PUT['body'])&&(isset($_PUT['status']))&&(isset($_PUT['category']))&&(isset($_PUT['article_id'])))){
+    if ((isset($_PUT['access_token']))&&(isset($_PUT['title']))&&(isset($_PUT['body']))&&(isset($_PUT['status']))&&(isset($_PUT['category']))&&(isset($_PUT['article_id']))&&(isset($_PUT['img']))){
         $access_token = htmlspecialchars($conn->real_escape_string($_PUT['access_token']));
         $sql = "SELECT * FROM op_tokens WHERE token='$access_token' LIMIT 1";
         $result = $conn->query($sql) or die ($conn->error);
@@ -271,8 +272,9 @@ elseif ($_SERVER['REQUEST_METHOD']=="PUT"){
                     $status = htmlspecialchars($conn->real_escape_string($_PUT['status']));
                     $category = htmlspecialchars($conn->real_escape_string($_PUT['category']));
                     $body = htmlspecialchars($conn->real_escape_string($_PUT['body']));
+                    $img = htmlspecialchars($conn->real_escape_string($_PUT['img']));
                     $time = time();
-                    $sql = "UPDATE op_articles SET title='$title',status='$status',body='$body',category='$category',up_timestamp='$time' WHERE id='$article_id'";
+                    $sql = "UPDATE op_articles SET title='$title',status='$status',body='$body',category='$category',up_timestamp='$time',img='$img' WHERE id='$article_id'";
                     if ($conn->query($sql) or die ($conn->error)) {
                         $response = array("message" => "Updated Successfully", "status" => "success_update");
                     }
@@ -293,8 +295,9 @@ elseif ($_SERVER['REQUEST_METHOD']=="PUT"){
                     $status = htmlspecialchars($conn->real_escape_string($_PUT['status']));
                     $category = htmlspecialchars($conn->real_escape_string($_PUT['category']));
                     $body = htmlspecialchars($conn->real_escape_string($_PUT['body']));
+                    $img = htmlspecialchars($conn->real_escape_string($_PUT['img']));
                     $time = time();
-                    $sql = "UPDATE op_articles SET title='$title',status='$status',body='$body',category='$category',up_timestamp='$time' WHERE id='$article_id'";
+                    $sql = "UPDATE op_articles SET title='$title',status='$status',body='$body',category='$category',up_timestamp='$time',img='$img' WHERE id='$article_id'";
                     if ($conn->query($sql) or die ($conn->error)) {
                         $response = array("message" => "Updated Successfully", "status" => "success_update");
                     }

@@ -57,8 +57,11 @@ include('../layout/header.php');
                 <h2>
                     <strong><?php echo $obj[0]['title']; ?></strong>
                 </h2>
+                <h4>
+                    <strong><?php echo $obj[0]['category']; ?></strong>
+                </h4>
                 <hr/>
-                <div id="editor">
+                <div id="editor" class="ql-container ql-snow ql-editor">
                     <?php echo $obj[0]['body']; ?>
                 </div>
             </div>
@@ -74,7 +77,11 @@ include('../layout/header.php');
                     if (($obj[0]['status']=="pending")||($obj[0]['status']=="rejected")) {
                 ?>
                 <button type="button" class="btn btn-success btn btn-block" onclick="setPublish();" id="approveButton">Approve and Publish</button>
-                <button type="button" class="btn btn-danger btn btn-block" onclick="setReject();" id="rejectButton">Reject</button>
+                <button type="button" class="btn btn-danger btn btn-block" onclick="setReject();" id="rejectButton">Copyread</button>
+                <hr/>
+                <textarea class="form-control" id="remarksBody"></textarea>
+                <div class="p-1"></div>
+                <button type="button" class="btn btn-default btn btn-block" onclick="addRemarks();" id="unpublishButton">Add Remarks</button>
                 <?php
                     }
                     elseif ($obj[0]['status']=="published") {
@@ -83,6 +90,11 @@ include('../layout/header.php');
                 <?php
                     }
                 ?>
+            </div>
+            <div class="card-header">
+                Remarks
+            </div>
+            <div class="card-body" id="showRemarks">
             </div>
         </div>
     </div>

@@ -51,7 +51,7 @@ include('../layout/header.php');
                 <div class="col-sm-3">
                     <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                         <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-pending" role="tab" aria-controls="v-pills-home" aria-selected="true">Pending</a>
-                        <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-rejected" role="tab" aria-controls="v-pills-profile" aria-selected="false">Rejected</a>
+                        <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-rejected" role="tab" aria-controls="v-pills-profile" aria-selected="false">Copyread</a>
                         <!-- <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-rejected" role="tab" aria-controls="v-pills-messages" aria-selected="false">Rejected</a> -->
                         <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-published" role="tab" aria-controls="v-pills-messages" aria-selected="false">Published</a>
                     </div>
@@ -83,7 +83,7 @@ include('../layout/header.php');
                             </div>
                         </div>
                         <div class="tab-pane fade" id="v-pills-rejected" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                            <h2>Rejected Articles</h2>
+                            <h2>Copyread Articles</h2>
                             <hr/>
                             <div class="row" style="padding-right: 20px; padding-left: 20px;">
                             <?php

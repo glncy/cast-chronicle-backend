@@ -10,10 +10,6 @@ header('Content-Type: application/json');
 
 // FETCH ALL USERS
 
-echo "<pre>";
-print_r($_SERVER);
-echo "</pre>";
-
 if ($_SERVER['REQUEST_METHOD']=="GET"){
     if (isset($_GET['user_id'])){
         // GET SPECIFIC USER
@@ -22,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
     }
     else {
         // GET ALL USER
-        $sql = "SELECT id,fname,lname,studentId,role,course,dept FROM op_users";
+        $sql = "SELECT id,fname,lname,studentId,role,course,dept FROM op_users WHERE role!='admin'";
     }
 
     $result = $conn->query($sql) or die ($conn->error);
@@ -45,8 +41,6 @@ elseif ($_SERVER['REQUEST_METHOD']=="PATCH"){
     $data = file_get_contents('php://input');
     $_PATCH = array();
     parse_str($data,$_PATCH);
-
-    echo $_PATCH;
     
     if ((isset($_PATCH['change_role']))&&(isset($_PATCH['user_id']))&&(isset($_PATCH['role']))) {
         $user_id = htmlspecialchars($conn->real_escape_string($_PATCH['user_id']));
