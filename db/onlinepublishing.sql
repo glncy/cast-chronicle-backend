@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.4
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jul 01, 2019 at 04:10 AM
--- Server version: 10.1.29-MariaDB
--- PHP Version: 7.2.0
+-- Host: localhost
+-- Generation Time: Oct 14, 2019 at 12:46 PM
+-- Server version: 10.3.16-MariaDB
+-- PHP Version: 7.3.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -33,29 +33,36 @@ CREATE TABLE `op_articles` (
   `user_id` int(10) NOT NULL,
   `status` varchar(10) NOT NULL,
   `title` text NOT NULL,
-  `body` text NOT NULL,
+  `body` longblob NOT NULL,
+  `category` varchar(20) NOT NULL,
+  `img` longblob NOT NULL,
   `up_timestamp` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `op_test`
+-- Table structure for table `op_remarks`
 --
 
-CREATE TABLE `op_test` (
+CREATE TABLE `op_remarks` (
   `id` int(255) NOT NULL,
-  `article` text NOT NULL
+  `target_id` int(255) NOT NULL,
+  `body` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `op_test`
+-- Table structure for table `op_tokens`
 --
 
-INSERT INTO `op_test` (`id`, `article`) VALUES
-(1, '<p>dlaksdjklasjd</p>'),
-(2, '<h2><strong>Lorem Ipsum Dolor</strong></h2><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut tempore quia possimus aspernatur totam numquam facilis soluta consectetur mollitia officiis. Temporibus odio repellendus nulla et omnis corporis, itaque unde dignissimos!</p>'),
-(3, '<h2><strong>Lorem Ipsum</strong></h2><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut tempore quia possimus aspernatur totam numquam facilis soluta consectetur mollitia officiis. Temporibus odio repellendus nulla et omnis corporis, itaque unde dignissimos!</p><blockquote><p><i>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut tempore quia possimus aspernatur totam numquam facilis soluta consectetur mollitia officiis. Temporibus odio repellendus nulla et omnis corporis, itaque unde dignissimos!</i></p></blockquote><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut tempore quia possimus aspernatur totam numquam facilis soluta consectetur mollitia officiis. Temporibus odio repellendus nulla et omnis corporis, itaque unde dignissimos!</p><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut tempore quia possimus aspernatur totam numquam facilis soluta consectetur mollitia officiis. Temporibus odio repellendus nulla et omnis corporis, itaque unde dignissimos!</p><p>&lt;h2&gt;&lt;strong&gt;Lorem Ipsum Dolor&lt;/strong&gt;&lt;/h2&gt;&lt;p&gt;Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut tempore quia possimus aspernatur totam numquam facilis soluta consectetur mollitia officiis. Temporibus odio repellendus nulla et omnis corporis, itaque unde dignissimos!&lt;/p&gt;</p>');
+CREATE TABLE `op_tokens` (
+  `id` int(255) NOT NULL,
+  `user_id` int(255) NOT NULL,
+  `token` varchar(32) NOT NULL,
+  `expiration` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -67,27 +74,43 @@ CREATE TABLE `op_users` (
   `id` int(10) NOT NULL,
   `fname` varchar(100) NOT NULL,
   `lname` varchar(100) NOT NULL,
-  `username` varchar(50) NOT NULL,
+  `studentId` varchar(20) NOT NULL,
   `pw` varchar(32) NOT NULL,
-  `role` varchar(10) NOT NULL
+  `role` varchar(10) NOT NULL,
+  `token` varchar(32) NOT NULL,
+  `course` varchar(100) NOT NULL,
+  `dept` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `op_users`
 --
 
-INSERT INTO `op_users` (`id`, `fname`, `lname`, `username`, `pw`, `role`) VALUES
-(1, 'Writer', 'One', 'writer1', '916171e9a6951662b2665bbf072f85f0', 'writer'),
-(2, 'Admin', 'One', 'admin1', '916171e9a6951662b2665bbf072f85f0', 'admin');
+INSERT INTO `op_users` (`id`, `fname`, `lname`, `studentId`, `pw`, `role`, `token`, `course`, `dept`) VALUES
+(1, 'Writer', 'One', 'writer1', '31d68dc5397dda4d4a2d5305d4c9fbba', 'writer', '', '', ''),
+(2, 'Admin', 'One', 'admin1', '31d68dc5397dda4d4a2d5305d4c9fbba', 'admin', '', '', ''),
+(3, 'Student', 'One', 'student1', '31d68dc5397dda4d4a2d5305d4c9fbba', 'student', '', '', '');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `op_test`
+-- Indexes for table `op_articles`
 --
-ALTER TABLE `op_test`
+ALTER TABLE `op_articles`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `op_remarks`
+--
+ALTER TABLE `op_remarks`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `op_tokens`
+--
+ALTER TABLE `op_tokens`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -101,16 +124,28 @@ ALTER TABLE `op_users`
 --
 
 --
--- AUTO_INCREMENT for table `op_test`
+-- AUTO_INCREMENT for table `op_articles`
 --
-ALTER TABLE `op_test`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `op_articles`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `op_remarks`
+--
+ALTER TABLE `op_remarks`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `op_tokens`
+--
+ALTER TABLE `op_tokens`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `op_users`
 --
 ALTER TABLE `op_users`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
