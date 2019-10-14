@@ -53,9 +53,22 @@ include('../layout/header.php');
     <div class="col-sm-8">
         <div class="card mb-3">
             <div class="card-body">
-                <div class="form-group">
-                    <label>Title</label>
-                    <input type="text" class="form-control" id="article_title" value="<?php echo $obj[0]['title']; ?>">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" class="form-control" id="article_title" value="<?php echo $obj[0]['title']; ?>">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="category" class="form-control">
+                                <option <?php echo ($obj[0]['category'] == "Test") ? "selected" : "" ; ?> >Test</option>
+                                <option <?php echo ($obj[0]['category'] == "Testing") ? "selected" : "" ; ?> >Testing</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Body</label>

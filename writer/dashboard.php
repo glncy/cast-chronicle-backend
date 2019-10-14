@@ -18,9 +18,22 @@ include('../layout/header.php');
                 Compose Draft
             </div>
             <div class="card-body">
-                <div class="form-group">
-                    <label>Title</label>
-                    <input type="text" class="form-control" id="article_title">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" class="form-control" id="article_title">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="category" class="form-control">
+                                <option disabled selected>Select Category</option>
+                                <option>Test</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Body</label>
