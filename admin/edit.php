@@ -57,9 +57,9 @@ include('../layout/header.php');
                 <h2>
                     <strong><?php echo $obj[0]['title']; ?></strong>
                 </h2>
-                <h4>
-                    <strong><?php echo $obj[0]['category']; ?></strong>
-                </h4>
+                <h6>
+                    Category: <strong><?php echo ucfirst($obj[0]['category']); ?></strong>
+                </h6>
                 <hr/>
                 <div id="editor" class="ql-container ql-snow ql-editor">
                     <?php echo $obj[0]['body']; ?>

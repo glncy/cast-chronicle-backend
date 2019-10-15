@@ -44,7 +44,7 @@
 		function confirmSubmit(){
 			var ifSubmitted = false;
 			var message = "";
-			if (document.getElementById("article_title").value != "") {
+			if ((document.getElementById("article_title").value != "")&&(document.getElementById("category").value != "")) {
 				var delta = quill.getContents();
 				var data = {
 					access_token: "<?php echo $_COOKIE['access_token']; ?>",
@@ -52,7 +52,7 @@
 					body: quillGetHTML(delta),
 					img: getImage(),
 					status: "draft",
-					category: ""
+					category: document.getElementById("category").value
 				}
 
 				$.ajax({
@@ -103,11 +103,28 @@
 				});	
 			}
 			else {
-				Swal.fire(
-					'Uh oh!',
-					'It has Empty Title!',
-					'warning'
-				)
+				if (document.getElementById("article_title").value == ""){
+					Swal.fire(
+						'Uh oh!',
+						'It has Empty Title!',
+						'warning'
+					)
+				}
+				else if (document.getElementById("category").value == ""){
+					Swal.fire(
+						'Uh oh!',
+						'It has Empty Category!',
+						'warning'
+					)
+				}
+				else {
+					Swal.fire(
+						'Uh oh!',
+						'It has Empty Title and Category!',
+						'warning'
+					)
+				}
+				
 			}
 		}
 
@@ -187,7 +204,7 @@
 					body: quillGetHTML(delta),
 					img: getImage(),
 					status: "draft",
-					category: "",
+					category: document.getElementById("category").value,
 					article_id: "<?php echo $obj[0]['id']; ?>"
 				}
 
@@ -282,7 +299,7 @@
 					body: quillGetHTML(delta),
 					img: getImage(),
 					status: "pending",
-					category: "",
+					category: document.getElementById("category").value,
 					article_id: "<?php echo $obj[0]['id']; ?>"
 				}
 
@@ -404,7 +421,7 @@
 					body: quillGetHTML(delta),
 					status: "draft",
 					img: getImage(),
-					category: "",
+					category: document.getElementById("category").value,
 					article_id: "<?php echo $obj[0]['id']; ?>"
 				}
 
@@ -736,9 +753,10 @@
 							'',
 							'success'
 						)
-						document.getElementById('approveButton').innerHTML = "Approve";
+						document.getElementById('approveButton').innerHTML = "Approve and Publish";
 						document.getElementById('rejectButton').removeAttribute("disabled");
 						document.getElementById('approveButton').removeAttribute("disabled");
+						window.location.href = "<?php echo baseURL();?>admin/edit.php?id=<?php echo $obj[0]['id']; ?>";
 					}, 2000);	
 				}
 				else {
@@ -748,9 +766,10 @@
 							'',
 							'warning'
 						)
-						document.getElementById('approveButton').innerHTML = "Approve";
+						document.getElementById('approveButton').innerHTML = "Approve and Publish";
 						document.getElementById('rejectButton').removeAttribute("disabled");
 						document.getElementById('approveButton').removeAttribute("disabled");
+						window.location.href = "<?php echo baseURL();?>admin/edit.php?id=<?php echo $obj[0]['id']; ?>";
 					}, 2000);
 				}
 			}

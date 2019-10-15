@@ -29,8 +29,14 @@ include('../layout/header.php');
                         <div class="form-group">
                             <label>Category</label>
                             <select id="category" class="form-control">
-                                <option disabled selected>Select Category</option>
-                                <option>Test</option>
+                                <option disabled selected value="">Select Category</option>
+                                <option value="news">News</option>
+                                <option value="devcomm">Devcomm</option>
+                                <option value="feature">Feature</option>
+                                <option value="sports">Sports</option>
+                                <option value="editorial">Editorial</option>
+                                <option value="opinion">Opinion</option>
+                                <option value="literary">Literary</option>
                             </select>
                         </div>
                     </div>

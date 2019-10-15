@@ -64,8 +64,13 @@ include('../layout/header.php');
                         <div class="form-group">
                             <label>Category</label>
                             <select id="category" class="form-control">
-                                <option <?php echo ($obj[0]['category'] == "Test") ? "selected" : "" ; ?> >Test</option>
-                                <option <?php echo ($obj[0]['category'] == "Testing") ? "selected" : "" ; ?> >Testing</option>
+                                <option <?php echo ($obj[0]['category'] == "news") ? "selected" : "" ; ?> value="news" >News</option>
+                                <option <?php echo ($obj[0]['category'] == "devcomm") ? "selected" : "" ; ?> value="devcomm">Devcomm</option>
+                                <option <?php echo ($obj[0]['category'] == "feature") ? "selected" : "" ; ?> value="feature">Feature</option>
+                                <option <?php echo ($obj[0]['category'] == "sports") ? "selected" : "" ; ?> value="sports">Sports</option>
+                                <option <?php echo ($obj[0]['category'] == "editorial") ? "selected" : "" ; ?> value="editorial">Editorial</option>
+                                <option <?php echo ($obj[0]['category'] == "opinion") ? "selected" : "" ; ?> value="opinion">Opinion</option>
+                                <option <?php echo ($obj[0]['category'] == "literary") ? "selected" : "" ; ?> value="literary">Literary</option>
                             </select>
                         </div>
                     </div>

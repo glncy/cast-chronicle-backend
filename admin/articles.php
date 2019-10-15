@@ -63,6 +63,7 @@ include('../layout/header.php');
                             <hr/>
                             <div class="row" style="padding-right: 20px; padding-left: 20px;">
                             <?php
+                            if (isset($loopCnt)){
                             $loop = 0;
                             while ($loop < $loopCnt) {
                                 if ($obj[$loop]['status'] == "pending"){
@@ -79,6 +80,7 @@ include('../layout/header.php');
                                 }
                                 $loop++;
                             }
+                            }
                             ?>
                             </div>
                         </div>
@@ -87,6 +89,7 @@ include('../layout/header.php');
                             <hr/>
                             <div class="row" style="padding-right: 20px; padding-left: 20px;">
                             <?php
+                            if (isset($loopCnt)){
                             $loop = 0;
                             while ($loop < $loopCnt) {
                                 if ($obj[$loop]['status'] == "rejected"){
@@ -103,6 +106,7 @@ include('../layout/header.php');
                                 }
                                 $loop++;
                             }
+                            }
                             ?>
                             </div>
                         </div>
@@ -111,6 +115,7 @@ include('../layout/header.php');
                             <hr/>
                             <div class="row" style="padding-right: 20px; padding-left: 20px;">
                             <?php
+                            if (isset($loopCnt)){
                             $loop = 0;
                             while ($loop < $loopCnt) {
                                 if ($obj[$loop]['status'] == "published"){
@@ -126,6 +131,7 @@ include('../layout/header.php');
                             <?php
                                 }
                                 $loop++;
+                            }
                             }
                             ?>
                             </div>
