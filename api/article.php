@@ -67,6 +67,19 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
             $continueIt = true;
         }
     }
+    elseif (isset($_GET['search'])) {
+        $search = $conn->real_escape_string($_GET['search']);
+        $categorySql = "";
+        if (isset($_GET['params'])) {
+            $params = $conn->real_escape_string($_GET['params']);
+            $sql = "SELECT ".$params." FROM op_articles WHERE status='published'".$categorySql." AND (title LIKE '%$search%') ORDER BY id DESC";
+            $continueIt = true;
+        }
+        else {
+            $sql = "SELECT * FROM op_articles WHERE status='published'".$categorySql." AND (title LIKE '%$search%') ORDER BY id DESC";
+            $continueIt = true;
+        }
+    }
     // ALL ARTICLE
     else {
         if (isset($_GET['category'])) {
