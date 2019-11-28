@@ -9,6 +9,54 @@
 	<?php
 	if (isset($section)) {
 		if ($section=="writers-panel") {
+	?>
+	<script>
+	window.onload = date_time('date_time');
+
+	function date_time(id)
+	{
+		date = new Date;
+		year = date.getFullYear();
+		month = date.getMonth();
+		months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'Jully', 'August', 'September', 'October', 'November', 'December');
+		d = date.getDate();
+		day = date.getDay();
+		days = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+		h = date.getHours();
+		if(h<10)
+		{
+				h = "0"+h;
+		}
+		m = date.getMinutes();
+		if(m<10)
+		{
+				m = "0"+m;
+		}
+		s = date.getSeconds();
+		if(s<10)
+		{
+				s = "0"+s;
+		}
+		//result = ''+days[day]+' '+months[month]+' '+d+', '+year+' '+h+':'+m+':'+s;
+		result = ''+days[day]+' '+months[month]+' '+d+', '+year+' '+DisplayCurrentTime();;
+		document.getElementById(id).innerHTML = result;
+		setTimeout('date_time("'+id+'");','1000');
+		return true;
+	}
+
+	function DisplayCurrentTime() {
+        var date = new Date();
+        var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+        var am_pm = date.getHours() >= 12 ? "PM" : "AM";
+        hours = hours < 10 ? "0" + hours : hours;
+        var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+        time = hours + ":" + minutes + ":" + seconds + " " + am_pm;
+        return time;
+    };
+
+	</script>
+	<?php
 			if (isset($pageSection)){
 				if ($pageSection == "dashboard"){
 	?>
@@ -27,6 +75,7 @@
 					[{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block' ],
 					[{ 'list': 'ordered' }, { 'list': 'bullet'}, { 'indent': '-1' }, { 'indent': '+1' }],
 					[ 'link', 'image', 'video'],
+					[ 'direction', { 'align': [] }]
 				]
 			}
 		});
@@ -162,6 +211,7 @@
 					[{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block' ],
 					[{ 'list': 'ordered' }, { 'list': 'bullet'}, { 'indent': '-1' }, { 'indent': '+1' }],
 					[ 'link', 'image', 'video'],
+					[ 'direction', { 'align': [] }]
 				]
 			}
 		});
@@ -496,6 +546,52 @@
 			}
 		}
 		elseif ($section=="admin-panel") {
+	?>
+	<script>
+	window.onload = date_time('date_time');
+	
+	function date_time(id)
+	{
+		date = new Date;
+		year = date.getFullYear();
+		month = date.getMonth();
+		months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'Jully', 'August', 'September', 'October', 'November', 'December');
+		d = date.getDate();
+		day = date.getDay();
+		days = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+		h = date.getHours();
+		if(h<10)
+		{
+				h = "0"+h;
+		}
+		m = date.getMinutes();
+		if(m<10)
+		{
+				m = "0"+m;
+		}
+		s = date.getSeconds();
+		if(s<10)
+		{
+				s = "0"+s;
+		}
+		result = ''+days[day]+' '+months[month]+' '+d+', '+year+' '+DisplayCurrentTime();
+		document.getElementById(id).innerHTML = result;
+		setTimeout('date_time("'+id+'");','1000');
+		return true;
+	}
+
+	function DisplayCurrentTime() {
+        var date = new Date();
+        var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+        var am_pm = date.getHours() >= 12 ? "PM" : "AM";
+        hours = hours < 10 ? "0" + hours : hours;
+        var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+        time = hours + ":" + minutes + ":" + seconds + " " + am_pm;
+        return time;
+    };
+	</script>
+	<?php
 			if (isset($pageSection)){
 				if ($pageSection == "articles"){
 	?>

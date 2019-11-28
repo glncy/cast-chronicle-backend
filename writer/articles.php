@@ -29,7 +29,6 @@ if ($err) {
     echo "cURL Error #:" . $err;
 } else {
     $obj = json_decode($response, true);
-
     if (isset($obj['status'])){
         if ($obj['status']=="no_access") {
             header("Location: logout.php");
@@ -64,8 +63,9 @@ include('../layout/header.php');
                             <div class="row" style="padding-right: 20px; padding-left: 20px;">
                             <?php
                             $loop = 0;
-                            while ($loop < $loopCnt) {
-                                if ($obj[$loop]['status'] == "draft"){
+                            if (!isset($obj['status'])){
+                                while ($loop < $loopCnt) {
+                                    if ($obj[$loop]['status'] == "draft"){
                             ?>
                             <div class="col-sm-12" style="padding-top: 10px; padding-bottom: 10px; margin-bottom: 10px;box-shadow: -1px 1px 3px rgba(0,0,0,0.3); border-radius: 5px;">
                                 <a href="#" onclick="openLink('<?php echo $obj[$loop]['id']; ?>')" style="text-decoration: none;">
@@ -76,8 +76,14 @@ include('../layout/header.php');
                                 </a>                            
                             </div>
                             <?php
+                                    }
+                                    $loop++;
                                 }
-                                $loop++;
+                            }
+                            else {
+                            ?>
+                            <h4>No Articles</h4>
+                            <?php
                             }
                             ?>
                             </div>
@@ -88,6 +94,7 @@ include('../layout/header.php');
                             <div class="row" style="padding-right: 20px; padding-left: 20px;">
                             <?php
                             $loop = 0;
+                            if (!isset($obj['status'])){
                             while ($loop < $loopCnt) {
                                 if ($obj[$loop]['status'] == "pending"){
                             ?>
@@ -103,6 +110,12 @@ include('../layout/header.php');
                                 }
                                 $loop++;
                             }
+                            }
+                            else {
+                                ?>
+                                <h4>No Articles</h4>
+                                <?php
+                            }
                             ?>
                             </div>
                         </div>
@@ -112,6 +125,7 @@ include('../layout/header.php');
                             <div class="row" style="padding-right: 20px; padding-left: 20px;">
                             <?php
                             $loop = 0;
+                            if (!isset($obj['status'])){
                             while ($loop < $loopCnt) {
                                 if ($obj[$loop]['status'] == "rejected"){
                             ?>
@@ -127,6 +141,12 @@ include('../layout/header.php');
                                 }
                                 $loop++;
                             }
+                            }
+                            else {
+                                ?>
+                                <h4>No Articles</h4>
+                                <?php
+                            }
                             ?>
                             </div>
                         </div>
@@ -136,6 +156,7 @@ include('../layout/header.php');
                             <div class="row" style="padding-right: 20px; padding-left: 20px;">
                             <?php
                             $loop = 0;
+                            if (!isset($obj['status'])){
                             while ($loop < $loopCnt) {
                                 if ($obj[$loop]['status'] == "published"){
                             ?>
@@ -151,6 +172,12 @@ include('../layout/header.php');
                                 }
                                 $loop++;
                             }
+                        }
+                        else {
+                            ?>
+                                <h4>No Articles</h4>
+                            <?php
+                        }
                             ?>
                             </div>
                         </div>

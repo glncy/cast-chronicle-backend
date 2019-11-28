@@ -2,7 +2,7 @@
 session_start();
 
 if (isset($_SESSION['admin_id'])) {
-    header("Location: dashboard.php");
+    header("Location: articles.php");
 }
 
 include('../functions.php');
@@ -49,7 +49,7 @@ if (isset($_POST['login'])){
             setcookie("access_token", $access_token, $expiration, "/");
             $_SESSION['admin_id'] = $obj[1]['id'];    
 
-            header("Location: dashboard.php");
+            header("Location: articles.php");
         }
         else {
             $status = $obj[0]['message'];

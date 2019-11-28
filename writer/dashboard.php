@@ -11,7 +11,7 @@ include('../functions.php');
 include('../layout/header.php');
 ?>
 
-<div class="row">
+<div class="row justify-content-center">
     <div class="col-sm-8">
         <div class="card mb-3">
             <div class="card-header">
@@ -48,28 +48,6 @@ include('../layout/header.php');
                     </div>
                 </div>
                 <button type="button" class="btn btn-success btn-sm float-right" onclick="confirmSubmit();" id="submitButton">Save Draft</button>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-4">
-        <div class="card mb-3">
-            <div class="card-header">
-                Approved
-            </div>
-            <div class="card-body">
-                <br/>
-            </div>
-            <div class="card-header">
-                Pending
-            </div>
-            <div class="card-body">
-                <br/>
-            </div>
-            <div class="card-header">
-                Drafts
-            </div>
-            <div class="card-body">
-                <br/>
             </div>
         </div>
     </div>

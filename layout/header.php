@@ -91,6 +91,11 @@
 	<nav class="navbar navbar-dark bg-primary">
 		<div class="container">
 			<span class="navbar-brand"><strong>Writers Panel</strong></span>
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<span id="date_time" style="color: white; font-weight: bold;"></span>
+				</li>
+			</ul>
 		</div>
 	</nav>
 	<nav class="navbar navbar-dark bg-primary navbar-expand-lg sticky-top">
@@ -147,6 +152,11 @@
 	<nav class="navbar navbar-dark bg-primary">
 		<div class="container">
 			<span class="navbar-brand"><strong>Admin Panel</strong></span>
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<span id="date_time" style="color: white; font-weight: bold;"></span>
+				</li>
+			</ul>
 		</div>
 	</nav>
 	<nav class="navbar navbar-dark bg-primary navbar-expand-lg sticky-top">
@@ -159,7 +169,6 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbar">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item active"><a href="<?php echo baseURL(); ?>admin/dashboard.php" class="nav-link">Dashboard</a></li>
 					<li class="nav-item"><a href="<?php echo baseURL(); ?>admin/articles.php" class="nav-link">Articles</a></li>
 					<li class="nav-item"><a href="<?php echo baseURL(); ?>admin/writers.php" class="nav-link">Writers</a></li>
 					<li class="nav-item"><a href="" class="nav-link">Events</a></li>
@@ -167,7 +176,7 @@
 				<ul class="navbar-nav">
 					<li class="nav-item dropdown">
 						<a href="" class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown">
-							Hi User!
+							Hi Admin!
 						</a>
 						<div class="dropdown-menu">
 							<a class="dropdown-item" href="#">Settings</a>
