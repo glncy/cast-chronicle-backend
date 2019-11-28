@@ -966,6 +966,42 @@
 	</script>
 	<?php
 				}
+				elseif ($pageSection == 'about'){
+	?>
+	<!-- Include the Quill library -->
+	<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+	<!-- Initialize Quill editor -->
+	<script>
+		var quill = new Quill('#editor', {
+			theme: 'snow',
+			modules: {
+					'toolbar': [
+					[{ 'font': [] }, { 'size': [] }],
+					[ 'bold', 'italic', 'underline', 'strike' ],
+					[{ 'color': [] }, { 'background': [] }],
+					[{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block' ],
+					[{ 'list': 'ordered' }, { 'list': 'bullet'}, { 'indent': '-1' }, { 'indent': '+1' }],
+					[ 'link', 'image', 'video'],
+					[ 'direction', { 'align': [] }]
+				]
+			}
+		});
+
+		function quillGetHTML(inputDelta) {
+			var tempCont = document.createElement("div");
+			(new Quill(tempCont)).setContents(inputDelta);
+			return tempCont.getElementsByClassName("ql-editor")[0].innerHTML;
+		}
+
+		function saveAbout(){
+			var delta = quill.getContents();
+			document.getElementById('aboutData').value = quillGetHTML(delta);
+			document.getElementById('aboutForm').submit();
+		}
+	</script>
+	<?php
+				}
 			}
 		}
 	}
