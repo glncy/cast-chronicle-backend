@@ -95,11 +95,13 @@ include('../layout/header.php');
                     if (($obj[0]['status']=="draft")||($obj[0]['status']=="rejected")) {
                 ?>
                 <button type="button" class="btn btn-info btn btn-block" onclick="setForApproval();" id="approvalButton">Submit for Approval</button>
+                <button type="button" class="btn btn-danger btn btn-block" onclick="confirmDelete();" id="deleteButton">Delete</button>
                 <?php
                     }
                     elseif ($obj[0]['status']=="pending") {
                 ?>
                 <button type="button" class="btn btn-info btn btn-block" onclick="setForApproval();" id="approvalButton">Update</button>
+                <button type="button" class="btn btn-danger btn btn-block" onclick="confirmDelete();" id="deleteButton">Delete</button>
                 <?php
                     }
                     elseif ($obj[0]['status']=="published") {

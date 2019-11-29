@@ -201,7 +201,7 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
                     $row['date_time'] = $readableDateTime;
                     $row['body'] = htmlspecialchars_decode($row['body']);
                 }
-                $getUserSql = "SELECT id,fname,lname,course,dept FROM op_users WHERE id='$user_id' LIMIT 1";
+                $getUserSql = "SELECT id,fname,lname,course,dept,img FROM op_users WHERE id='$user_id' LIMIT 1";
                 $getUserResult = $conn->query($getUserSql) or die($conn->error());
                 if ($getUserResult->num_rows > 0){
                     unset($row['user_id']);

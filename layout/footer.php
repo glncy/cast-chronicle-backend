@@ -243,6 +243,22 @@
 			}
 		}
 
+		function confirmDelete(){
+			Swal.fire({
+				title: 'Are you sure?',
+				text: "Your document will be deleted",
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Yes, delete it!'
+				}).then((result) => {
+				if (result.value) {
+					submitAsDelete();
+				}
+			});
+		}
+
 		function submitAsDraft(){
 			var ifSubmitted = false;
 			var message = "";
@@ -317,6 +333,61 @@
 					'warning'
 				)
 			}
+		}
+		function submitAsDelete(){
+			var ifSubmitted = false;
+			var message = "";
+			var delta = quill.getContents();
+			var data = {
+				access_token: "<?php echo $_COOKIE['access_token']; ?>",
+				article_id: "<?php echo $obj[0]['id']; ?>"
+			}
+
+			$.ajax({
+				url: "<?php echo baseURL(); ?>api/article.php",
+				type: "delete",
+				data: data,
+				beforeSend: function(){
+					Swal.fire({
+  						icon: 'warning',
+  						title: 'Deleting Article...',
+  						showConfirmButton: false,
+					})
+				},
+				success: function(r){
+					var str = JSON.stringify(r);
+					var obj = JSON.parse(str);
+
+					if (obj.status == "success_delete") {
+						ifSubmitted = true;
+						message = obj.message;
+					}
+					else {
+						message = obj.message;
+					}					
+				},
+				complete: function(){
+					if (ifSubmitted) {
+						setTimeout(function(){
+							Swal.fire(
+								message,
+								'',
+								'success'
+							)
+							window.location.href = "articles.php";
+						}, 2000);	
+					}
+					else {
+						setTimeout(function(){
+							Swal.fire(
+								message,
+								'',
+								'warning'
+							)
+						}, 2000);
+					}
+				}
+			});
 		}
 
 		function setForApproval(){
