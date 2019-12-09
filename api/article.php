@@ -30,6 +30,10 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
                     $sql = "SELECT * FROM op_articles WHERE id='$article_id' LIMIT 1";
                     $continueIt = true;
                 }
+                elseif ($row['role']=="copyreader") {
+                    $sql = "SELECT * FROM op_articles WHERE id='$article_id' LIMIT 1";
+                    $continueIt = true;
+                }
                 elseif ($row['role']=="writer") {
                     $sql = "SELECT * FROM op_articles WHERE user_id='$user_id' AND id='$article_id' LIMIT 1";
                     $continueIt = true;
@@ -113,6 +117,10 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
                             $sql = "SELECT ".$params." FROM op_articles ".$categorySql." ORDER BY up_timestamp DESC";
                             $continueIt = true;
                         }
+                        elseif ($row['role'] == "copyreader") {
+                            $sql = "SELECT ".$params." FROM op_articles ".$categorySql." ORDER BY up_timestamp DESC";
+                            $continueIt = true;
+                        }
                         elseif ($row['role'] == "writer") {
                             $sql = "SELECT ".$params." FROM op_articles WHERE user_id='$user_id'".$categorySql." ORDER BY up_timestamp DESC";
                             $continueIt = true;   
@@ -150,6 +158,10 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
                     if ($result->num_rows > 0) {
                         $row = $result->fetch_assoc();
                         if ($row['role'] == "admin") {
+                            $sql = "SELECT * FROM op_articles".$categorySql." ORDER BY up_timestamp DESC";
+                            $continueIt = true;
+                        }
+                        elseif ($row['role'] == "copyreader") {
                             $sql = "SELECT * FROM op_articles".$categorySql." ORDER BY up_timestamp DESC";
                             $continueIt = true;
                         }
@@ -276,7 +288,7 @@ elseif ($_SERVER['REQUEST_METHOD']=="PUT"){
             $sql = "SELECT role FROM op_users WHERE id='$user_id' LIMIT 1";
             $result = $conn->query($sql) or die ($conn->error);
             $row = $result->fetch_assoc();
-            if ($row['role']=="admin") {
+            if (($row['role']=="admin")||($row['role']=="copyreader")) {
                 $article_id = htmlspecialchars($conn->real_escape_string($_PUT['article_id']));
                 $sql = "SELECT * FROM op_articles WHERE id='$article_id' LIMIT 1";
                 $result = $conn->query($sql) or die ($conn->error);

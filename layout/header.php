@@ -90,7 +90,7 @@
 	</section>
 	<nav class="navbar navbar-dark bg-primary">
 		<div class="container">
-			<span class="navbar-brand"><strong>Writers Panel</strong></span>
+			<span class="navbar-brand"><strong>Hi <?php echo $_SESSION['name']; ?>!</strong></span>
 			<ul class="navbar-nav">
 				<li class="nav-item">
 					<span id="date_time" style="color: white; font-weight: bold;"></span>
@@ -177,6 +177,56 @@
 					<li class="nav-item dropdown">
 						<a href="" class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown">
 							Hi Admin!
+						</a>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" href="settings.php">Settings</a>
+							<a class="dropdown-item" href="logout.php">Log Out</a>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<?php
+		}
+		else if ($section=="copyreader-panel") {
+	?>
+	<!-- COPYREADER NAV -->
+	<section style="background: yellow;">
+		<div class="container">
+			<div class="row justify-content-center py-4 align-items-center no-gutters">
+				<div class="col-sm-5">
+					<center><img src="<?php echo baseURL(); ?>/img/logo-ccnp.png" class="img-fluid" style="-webkit-filter:drop-shadow(3px 3px 2px rgba(0,0,0,1));"></center>
+				</div>
+			</div>
+		</div>
+	</section>
+	<nav class="navbar navbar-dark bg-primary">
+		<div class="container">
+			<span class="navbar-brand"><strong>Copyreader Panel</strong></span>
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<span id="date_time" style="color: white; font-weight: bold;"></span>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<nav class="navbar navbar-dark bg-primary navbar-expand-lg sticky-top">
+		<div class="container">
+			<a href="" class="navbar-brand">
+				<img src="<?php echo baseURL(); ?>/img/logo-cc.png" style="width: 40px;">
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbar">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item"><a href="<?php echo baseURL(); ?>copyreader/articles.php" class="nav-link">Articles</a></li>
+				</ul>
+				<ul class="navbar-nav">
+					<li class="nav-item dropdown">
+						<a href="" class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown">
+							Hi Copyreader!
 						</a>
 						<div class="dropdown-menu">
 							<a class="dropdown-item" href="settings.php">Settings</a>

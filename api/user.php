@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
     }
     else {
         // GET ALL USER
-        $sql = "SELECT id,fname,lname,studentId,role,course,dept FROM op_users WHERE role!='admin'";
+        $sql = "SELECT id,fname,lname,studentId,role,course,dept FROM op_users WHERE role!='admin' AND role!='copyreader'";
     }
 
     $result = $conn->query($sql) or die ($conn->error);

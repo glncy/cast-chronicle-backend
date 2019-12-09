@@ -1,7 +1,7 @@
 <?php
 include('process/auth.php');
 
-$section = "admin-panel";
+$section = "copyreader-panel";
 
 $pageSection = "edit";
 
@@ -73,24 +73,7 @@ include('../layout/header.php');
                 Actions
             </div>
             <div class="card-body">
-                <?php
-                    if (($obj[0]['status']=="pending")||($obj[0]['status']=="rejected")||($obj[0]['status']=="copyread")) {
-                ?>
-                <button type="button" class="btn btn-success btn btn-block" onclick="setPublish();" id="approveButton">Approve and Publish</button>
-                <button type="button" class="btn btn-danger btn btn-block" onclick="setReject();" id="rejectButton">Copyread to Writer</button>
-                <button type="button" class="btn btn-danger btn btn-block" onclick="setRejectCopyreader();" id="rejectButton2">Copyread to Copyreader</button>
-                <hr/>
-                <textarea class="form-control" id="remarksBody"></textarea>
-                <div class="p-1"></div>
-                <button type="button" class="btn btn-default btn btn-block" onclick="addRemarks();" id="unpublishButton">Add Remarks</button>
-                <?php
-                    }
-                    elseif ($obj[0]['status']=="published") {
-                ?>
-                <button type="button" class="btn btn-info btn btn-block" onclick="setUnpublish();" id="unpublishButton">Unpublish</button>
-                <?php
-                    }
-                ?>
+                <button type="button" class="btn btn-success btn btn-block" onclick="setCopyread();" id="approveButton">Submit</button>
             </div>
             <div class="card-header">
                 Remarks

@@ -92,7 +92,7 @@ include('../layout/header.php');
                             if (isset($loopCnt)){
                             $loop = 0;
                             while ($loop < $loopCnt) {
-                                if ($obj[$loop]['status'] == "rejected"){
+                                if (($obj[$loop]['status'] == "rejected")||($obj[$loop]['status'] == "copyread")){
                             ?>
                             <div class="col-sm-12" style="padding-top: 10px; padding-bottom: 10px; margin-bottom: 10px;box-shadow: -1px 1px 3px rgba(0,0,0,0.3); border-radius: 5px;">
                                 <a href="#" onclick="openLink('<?php echo $obj[$loop]['id']; ?>')" style="text-decoration: none;">

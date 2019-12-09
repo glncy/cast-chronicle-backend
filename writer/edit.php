@@ -71,6 +71,7 @@ include('../layout/header.php');
                                 <option <?php echo ($obj[0]['category'] == "editorial") ? "selected" : "" ; ?> value="editorial">Editorial</option>
                                 <option <?php echo ($obj[0]['category'] == "opinion") ? "selected" : "" ; ?> value="opinion">Opinion</option>
                                 <option <?php echo ($obj[0]['category'] == "literary") ? "selected" : "" ; ?> value="literary">Literary</option>
+                                <option <?php echo ($obj[0]['category'] == "photojourn") ? "selected" : "" ; ?> value="literary">Photo Journalism</option>
                             </select>
                         </div>
                     </div>

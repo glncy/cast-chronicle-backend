@@ -37,6 +37,7 @@ include('../layout/header.php');
                                 <option value="editorial">Editorial</option>
                                 <option value="opinion">Opinion</option>
                                 <option value="literary">Literary</option>
+                                <option value="photojourn">Photo Journalism</option>
                             </select>
                         </div>
                     </div>

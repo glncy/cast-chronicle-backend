@@ -618,6 +618,7 @@
 		}
 		elseif ($section=="admin-panel") {
 	?>
+	
 	<script>
 	window.onload = date_time('date_time');
 	
@@ -675,8 +676,25 @@
 				}
 				elseif ($pageSection == "edit"){
 	?>
+	<!-- Include the Quill library -->
+	<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 	<script>
 	window.onload = getRemarks();
+
+	var quill = new Quill('#editor', {
+		theme: 'snow',
+		modules: {
+				'toolbar': [
+				[{ 'font': [] }, { 'size': [] }],
+				[ 'bold', 'italic', 'underline', 'strike' ],
+				[{ 'color': [] }, { 'background': [] }],
+				[{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block' ],
+				[{ 'list': 'ordered' }, { 'list': 'bullet'}, { 'indent': '-1' }, { 'indent': '+1' }],
+				[ 'link', 'image', 'video'],
+				[ 'direction', { 'align': [] }]
+			]
+		}
+	});
 
 	function deleteRemark(id){
 		if(confirm("Delete Remarks?")){
@@ -769,7 +787,7 @@
 	function setReject(){
 		Swal.fire({
 			title: 'Are you sure?',
-			text: "This will be set as Copyread.",
+			text: "This will be Copyread by Writer.",
 			type: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: '#3085d6',
@@ -777,7 +795,23 @@
 			confirmButtonText: 'Yes'
 			}).then((result) => {
 			if (result.value) {
-				submitAsReject();
+				submitAsReject("rejected");
+			}
+		});
+	}
+
+	function setRejectCopyreader(){
+		Swal.fire({
+			title: 'Are you sure?',
+			text: "This will be Copyread by Copyreader.",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes'
+			}).then((result) => {
+			if (result.value) {
+				submitAsReject("copyread");
 			}
 		});
 	}
@@ -814,15 +848,15 @@
 		});
 	}
 
-	function submitAsReject(){	
+	function submitAsReject(copyreadStatus){	
 		var ifSubmitted = false;
 		var message = "";
 
 		var data = {
 			access_token: "<?php echo $_COOKIE['access_token']; ?>",
 			title: "<?php echo $conn->real_escape_string($obj[0]['title']); ?>",
-			body: "<?php echo $conn->real_escape_string($obj[0]['body']); ?>",
-			status: "rejected",
+			body: quillGetHTML(quill.getContents()),
+			status: copyreadStatus,
 			category: "<?php echo $obj[0]['category']; ?>",
 			article_id: "<?php echo $obj[0]['id']; ?>"
 		}
@@ -885,7 +919,7 @@
 		var data = {
 			access_token: "<?php echo $_COOKIE['access_token']; ?>",
 			title: "<?php echo $conn->real_escape_string($obj[0]['title']); ?>",
-			body: "<?php echo $conn->real_escape_string($obj[0]['body']); ?>",
+			body: quillGetHTML(quill.getContents()),
 			status: "published",
 			category: "<?php echo $obj[0]['category']; ?>",
 			article_id: "<?php echo $obj[0]['id']; ?>"
@@ -950,7 +984,7 @@
 		var data = {
 			access_token: "<?php echo $_COOKIE['access_token']; ?>",
 			title: "<?php echo $conn->real_escape_string($obj[0]['title']); ?>",
-			body: "<?php echo $conn->real_escape_string($obj[0]['body']); ?>",
+			body: quillGetHTML(quill.getContents()),
 			status: "pending",
 			category: "<?php echo $obj[0]['category']; ?>",
 			article_id: "<?php echo $obj[0]['id']; ?>"
@@ -999,6 +1033,12 @@
 			}
 		});
 	}
+
+	function quillGetHTML(inputDelta) {
+		var tempCont = document.createElement("div");
+		(new Quill(tempCont)).setContents(inputDelta);
+		return tempCont.getElementsByClassName("ql-editor")[0].innerHTML;
+	}
 	</script>
 	<?php
 				}
@@ -1019,10 +1059,10 @@
 					{ data : "id" , 
 						render : function (data, type, row) {
 							if (row.role == "writer") {
-								return '<button class="btn btn-danger btn-sm" onclick="change_role(\''+row.id+'\',\'student\')">Disable Writer</button>';
+								return '<center><button class="btn btn-danger btn-sm" onclick="change_role(\''+row.id+'\',\'student\')">Disable Writer</button>&nbsp&nbsp<button class="btn btn-success btn-sm" onclick="change_profile(\''+row.id+'\');" type="button" data-toggle="modal" data-target="#changeImageModal"">Change Picture</button></center>';
 							}
 							else {
-								return '<button class="btn btn-info btn-sm" onclick="change_role(\''+row.id+'\',\'writer\')">Enable Writer</button>';
+								return '<center><button class="btn btn-info btn-sm" onclick="change_role(\''+row.id+'\',\'writer\')">Enable Writer</button></center>';
 							}
 						}
 					}
@@ -1034,6 +1074,52 @@
 			window.location.href = "<?= baseURL(); ?>admin/process/change_role.php?id="+id+"&role="+role;
 		}
 
+		function change_profile(id) {
+			document.getElementById("writer_id").value = id;
+			$.ajax({
+				url: "<?= baseURL(); ?>api/user.php",
+				type: "GET",
+				data: {
+					user_id: id
+				},
+				success: function(response){
+					if (response[0].img != ""){
+						$('#imgOut').attr('src', response[0].img);
+					}
+					else {
+						document.getElementById("message").innerHTML = "No Image Found"
+					}
+				}
+			});
+		}
+
+		function readURL(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			
+			reader.onload = function(e) {
+			$('#imgOut').attr('src', e.target.result);
+			document.getElementById('imgContainer').value = e.target.result;
+			document.getElementById('message').innerHTML = "";
+			}
+			
+			reader.readAsDataURL(input.files[0]);
+		}
+		}
+
+		function verifyAndSubmit(){
+			if (document.getElementById('imgContainer').value != ""){
+				document.getElementById('imgPic').submit();
+			}
+			else {
+				alert("No Image Selected.");
+			}
+		}
+
+		$("#imgprv").change(function() {
+		document.getElementById('buttonChange').removeAttribute("disabled");
+		readURL(this);
+		});
 	</script>
 	<?php
 				}
@@ -1070,6 +1156,204 @@
 			document.getElementById('aboutData').value = quillGetHTML(delta);
 			document.getElementById('aboutForm').submit();
 		}
+	</script>
+	<?php
+				}
+			}
+		}
+		elseif ($section=="copyreader-panel") {
+	?>
+	
+	<script>
+	window.onload = date_time('date_time');
+	
+	function date_time(id)
+	{
+		date = new Date;
+		year = date.getFullYear();
+		month = date.getMonth();
+		months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'Jully', 'August', 'September', 'October', 'November', 'December');
+		d = date.getDate();
+		day = date.getDay();
+		days = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+		h = date.getHours();
+		if(h<10)
+		{
+				h = "0"+h;
+		}
+		m = date.getMinutes();
+		if(m<10)
+		{
+				m = "0"+m;
+		}
+		s = date.getSeconds();
+		if(s<10)
+		{
+				s = "0"+s;
+		}
+		result = ''+days[day]+' '+months[month]+' '+d+', '+year+' '+DisplayCurrentTime();
+		document.getElementById(id).innerHTML = result;
+		setTimeout('date_time("'+id+'");','1000');
+		return true;
+	}
+
+	function DisplayCurrentTime() {
+        var date = new Date();
+        var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+        var am_pm = date.getHours() >= 12 ? "PM" : "AM";
+        hours = hours < 10 ? "0" + hours : hours;
+        var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+        time = hours + ":" + minutes + ":" + seconds + " " + am_pm;
+        return time;
+    };
+	</script>
+	<?php
+			if (isset($pageSection)){
+				if ($pageSection == "articles"){
+	?>
+	<script>
+		function openLink(id){
+			window.location.href = "<?php echo baseURL();?>copyreader/edit.php?id="+id;
+		}
+	</script>
+	<?php
+				}
+				elseif ($pageSection == "edit"){
+	?>
+	<!-- Include the Quill library -->
+	<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+	<script>
+	window.onload = getRemarks();
+
+	var quill = new Quill('#editor', {
+		theme: 'snow',
+		modules: {
+				'toolbar': [
+				[{ 'font': [] }, { 'size': [] }],
+				[ 'bold', 'italic', 'underline', 'strike' ],
+				[{ 'color': [] }, { 'background': [] }],
+				[{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block' ],
+				[{ 'list': 'ordered' }, { 'list': 'bullet'}, { 'indent': '-1' }, { 'indent': '+1' }],
+				[ 'link', 'image', 'video'],
+				[ 'direction', { 'align': [] }]
+			]
+		}
+	});
+
+	function getRemarks() {
+		var data = {
+			article_id: "<?php echo $obj[0]['id']; ?>"
+		}
+
+		$.ajax({
+			url: "<?php echo baseURL(); ?>api/remark.php",
+			type: "get",
+			data: data,
+			success: function(r){
+				var str = JSON.stringify(r);
+				var obj = JSON.parse(str);
+				if (typeof obj[0].status === "undefined") {
+					var displayRemarks = "";
+					var loopCnt = obj.length;
+					var loop = 0;
+					displayRemarks = "<ol>"
+					while (loop < loopCnt) {
+						displayRemarks += "<li>"+obj[loop].body+"</li>";
+						loop++;
+					}
+					displayRemarks += "</ol>";
+					document.getElementById('showRemarks').innerHTML = displayRemarks;
+				}
+				else {
+					document.getElementById('showRemarks').innerHTML = "No Remarks";
+				}
+			}
+		});
+	}
+
+	function setCopyread(){
+		Swal.fire({
+			title: 'Are you sure?',
+			text: "Changes will be sent to Admin.",
+			type: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes'
+			}).then((result) => {
+			if (result.value) {
+				submitAsApproved();
+			}
+		});
+	}
+
+
+	function submitAsApproved(){
+		var ifSubmitted = false;
+		var message = "";
+
+		var data = {
+			access_token: "<?php echo $_COOKIE['access_token']; ?>",
+			title: "<?php echo $conn->real_escape_string($obj[0]['title']); ?>",
+			body: quillGetHTML(quill.getContents()),
+			status: "pending",
+			category: "<?php echo $obj[0]['category']; ?>",
+			article_id: "<?php echo $obj[0]['id']; ?>"
+		}
+
+		$.ajax({
+			url: "<?php echo baseURL(); ?>api/article.php",
+			type: "put",
+			data: data,
+			beforeSend: function(){
+				document.getElementById('approveButton').innerHTML = "Setting It...";
+				document.getElementById('approveButton').setAttribute("disabled","");
+			},
+			success: function(r){
+				var str = JSON.stringify(r);
+				var obj = JSON.parse(str);
+
+				if (obj.status == "success_update") {
+					ifSubmitted = true;
+					message = obj.message;
+				}
+				else {
+					message = obj.message;
+				}					
+			},
+			complete: function(){
+				if (ifSubmitted) {
+					setTimeout(function(){
+						Swal.fire(
+							message,
+							'',
+							'success'
+						)
+						window.location.href = "<?php echo baseURL();?>copyreader/articles.php";
+					}, 2000);	
+				}
+				else {
+					setTimeout(function(){
+						Swal.fire(
+							message,
+							'',
+							'warning'
+						)
+						document.getElementById('approveButton').innerHTML = "Submit";
+						document.getElementById('approveButton').removeAttribute("disabled");
+						window.location.href = "<?php echo baseURL();?>copyreader/edit.php?id=<?php echo $obj[0]['id']; ?>";
+					}, 2000);
+				}
+			}
+		});
+	}
+
+	function quillGetHTML(inputDelta) {
+		var tempCont = document.createElement("div");
+		(new Quill(tempCont)).setContents(inputDelta);
+		return tempCont.getElementsByClassName("ql-editor")[0].innerHTML;
+	}
 	</script>
 	<?php
 				}

@@ -48,6 +48,7 @@ if (isset($_POST['login'])){
 
             setcookie("access_token", $access_token, $expiration, "/");
             $_SESSION['writer_id'] = $obj[1]['id'];    
+            $_SESSION['name'] = $obj[1]['fname']." ".$obj[1]['lname'];    
 
             header("Location: dashboard.php");
         }

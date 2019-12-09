@@ -1,7 +1,7 @@
 <?php
 include('process/auth.php');
 
-$section = "writers-panel";
+$section = "admin-panel";
 
 $pageSection = "about";
 
@@ -10,11 +10,6 @@ include('../functions.php');
 // HEADER
 include('../config/connection.php');
 include('../layout/header.php');
-$id = $_SESSION['writer_id'];
-
-$sql = "SELECT * FROM op_users WHERE id='$id' LIMIT 1";
-$result = $conn->query($sql);
-$row = $result->fetch_assoc();
 ?>
 
 <div class="row justify-content-center">
@@ -39,34 +34,6 @@ $row = $result->fetch_assoc();
         </div>
     </div>
 </div>
-<script>
-// function readURL(input) {
-//   if (input.files && input.files[0]) {
-//     var reader = new FileReader();
-    
-//     reader.onload = function(e) {
-//       $('#imgOut').attr('src', e.target.result);
-//       document.getElementById('imgContainer').value = e.target.result;
-//       document.getElementById('message').innerHTML = "";
-//     }
-    
-//     reader.readAsDataURL(input.files[0]);
-//   }
-// }
-
-// function verifyAndSubmit(){
-//     if (document.getElementById('imgContainer').value != ""){
-//         document.getElementById('imgPic').submit();
-//     }
-//     else {
-//         alert("No Image Selected.");
-//     }
-// }
-// $("#imgprv").change(function() {
-//   document.getElementById('buttonChange').removeAttribute("disabled");
-//   readURL(this);
-// });
-</script>
 <?php
 include('../layout/footer.php');
 ?>

@@ -68,6 +68,9 @@ elseif ($_SERVER['REQUEST_METHOD']=="POST") {
             elseif ($_POST['role'] == "writer") {
                 $sql = "SELECT id,fname,lname,studentId,role,course,dept FROM op_users WHERE studentId='$studentId' AND pw='$pw' AND (role='admin' OR role='writer') LIMIT 1";                            
             }
+            elseif ($_POST['role'] == "copyreader") {
+                $sql = "SELECT id,fname,lname,studentId,role,course,dept FROM op_users WHERE studentId='$studentId' AND pw='$pw' AND role='copyreader' OR role='admin' LIMIT 1";                            
+            }
             else {
                 $sql = "SELECT id,fname,lname,studentId,role,course,dept FROM op_users WHERE studentId='$studentId' AND pw='$pw' LIMIT 1";
             }
@@ -94,10 +97,13 @@ elseif ($_SERVER['REQUEST_METHOD']=="POST") {
         else {
             if (isset($_POST['role'])) {
                 if ($_POST['role'] == "admin"){
-                    $response[] = array("message" => "Invalid Student ID / Username or Password", "status" => "invalid_login");
+                    $response[] = array("message" => "Invalid Username or Password", "status" => "invalid_login");
                 }
                 elseif ($_POST['role'] == "writer"){
                     $response[] = array("message" => "Invalid Student ID or Password", "status" => "invalid_login");
+                }
+                elseif ($_POST['role'] == "copyreader"){
+                    $response[] = array("message" => "Invalid Username or Password", "status" => "invalid_login");
                 }
             }
             else {
