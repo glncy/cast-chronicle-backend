@@ -171,6 +171,7 @@
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item"><a href="<?php echo baseURL(); ?>admin/articles.php" class="nav-link">Articles</a></li>
 					<li class="nav-item"><a href="<?php echo baseURL(); ?>admin/writers.php" class="nav-link">Writers</a></li>
+					<li class="nav-item"><a href="<?php echo baseURL(); ?>admin/homeEditor.php" class="nav-link">Home Editor</a></li>
 					<li class="nav-item"><a href="<?php echo baseURL(); ?>admin/about.php" class="nav-link">About Editor</a></li>
 				</ul>
 				<ul class="navbar-nav">
