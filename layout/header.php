@@ -79,16 +79,16 @@
 		if ($section=="writers-panel") {
 	?>
 	<!-- WRITERS NAV -->
-	<section style="background: yellow;">
+	<section style="background: #daad0c;">
 		<div class="container">
-			<div class="row justify-content-center py-4 align-items-center no-gutters">
-				<div class="col-sm-5">
-					<center><img src="<?php echo baseURL(); ?>/img/logo-ccnp.png" class="img-fluid" style="-webkit-filter:drop-shadow(3px 3px 2px rgba(0,0,0,1));"></center>
+			<div class="row justify-content-center align-items-center no-gutters">
+				<div class="col-sm-8">
+					<center><img src="<?php echo baseURL(); ?>/img/logo-ccnp.png" class="img-fluid" style="-webkit-filter:drop-shadow(3px 3px 2px rgba(0,0,0,0.5));"></center>
 				</div>
 			</div>
 		</div>
 	</section>
-	<nav class="navbar navbar-dark bg-primary">
+	<nav class="navbar navbar-dark" style="background: #1305b0;">
 		<div class="container">
 			<span class="navbar-brand"><strong>Hi <?php echo $_SESSION['name']; ?>!</strong></span>
 			<ul class="navbar-nav">
@@ -98,7 +98,7 @@
 			</ul>
 		</div>
 	</nav>
-	<nav class="navbar navbar-dark bg-primary navbar-expand-lg sticky-top">
+	<nav class="navbar navbar-dark navbar-expand-lg sticky-top" style="background: #1305b0;">
 		<div class="container">
 			<a href="" class="navbar-brand">
 				<img src="<?php echo baseURL(); ?>/img/logo-cc.png" style="width: 40px;">
@@ -140,16 +140,16 @@
 		else if ($section=="admin-panel") {
 	?>
 	<!-- ADMIN NAV -->
-	<section style="background: yellow;">
+	<section style="background: #daad0c;">
 		<div class="container">
-			<div class="row justify-content-center py-4 align-items-center no-gutters">
-				<div class="col-sm-5">
-					<center><img src="<?php echo baseURL(); ?>/img/logo-ccnp.png" class="img-fluid" style="-webkit-filter:drop-shadow(3px 3px 2px rgba(0,0,0,1));"></center>
+			<div class="row justify-content-center align-items-center no-gutters">
+				<div class="col-sm-8">
+					<center><img src="<?php echo baseURL(); ?>/img/logo-ccnp.png" class="img-fluid" style="-webkit-filter:drop-shadow(3px 3px 2px rgba(0,0,0,0.5));"></center>
 				</div>
 			</div>
 		</div>
 	</section>
-	<nav class="navbar navbar-dark bg-primary">
+	<nav class="navbar navbar-dark" style="background: #1305b0;">
 		<div class="container">
 			<span class="navbar-brand"><strong>Admin Panel</strong></span>
 			<ul class="navbar-nav">
@@ -159,7 +159,7 @@
 			</ul>
 		</div>
 	</nav>
-	<nav class="navbar navbar-dark bg-primary navbar-expand-lg sticky-top">
+	<nav class="navbar navbar-dark navbar-expand-lg sticky-top" style="background: #1305b0;">
 		<div class="container">
 			<a href="" class="navbar-brand">
 				<img src="<?php echo baseURL(); ?>/img/logo-cc.png" style="width: 40px;">
@@ -193,16 +193,16 @@
 		else if ($section=="copyreader-panel") {
 	?>
 	<!-- COPYREADER NAV -->
-	<section style="background: yellow;">
+	<section style="background: #daad0c;">
 		<div class="container">
-			<div class="row justify-content-center py-4 align-items-center no-gutters">
-				<div class="col-sm-5">
-					<center><img src="<?php echo baseURL(); ?>/img/logo-ccnp.png" class="img-fluid" style="-webkit-filter:drop-shadow(3px 3px 2px rgba(0,0,0,1));"></center>
+			<div class="row justify-content-center align-items-center no-gutters">
+				<div class="col-sm-8">
+					<center><img src="<?php echo baseURL(); ?>/img/logo-ccnp.png" class="img-fluid" style="-webkit-filter:drop-shadow(3px 3px 2px rgba(0,0,0,0.5));"></center>
 				</div>
 			</div>
 		</div>
 	</section>
-	<nav class="navbar navbar-dark bg-primary">
+	<nav class="navbar navbar-dark" style="background: #1305b0;">
 		<div class="container">
 			<span class="navbar-brand"><strong>Copyreader Panel</strong></span>
 			<ul class="navbar-nav">
@@ -212,7 +212,7 @@
 			</ul>
 		</div>
 	</nav>
-	<nav class="navbar navbar-dark bg-primary navbar-expand-lg sticky-top">
+	<nav class="navbar navbar-dark navbar-expand-lg sticky-top" style="background: #1305b0;">
 		<div class="container">
 			<a href="" class="navbar-brand">
 				<img src="<?php echo baseURL(); ?>/img/logo-cc.png" style="width: 40px;">

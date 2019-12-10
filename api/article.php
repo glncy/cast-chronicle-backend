@@ -8,6 +8,13 @@ include('../functions.php');
 header("Access-Control-Allow-Origin: *");
 header('Content-Type: application/json');
 
+$lastYear = date("Y",strtotime("-1 year"));
+$timestamp = strtotime(date("Y-m-d",strtotime($lastYear."-12-31")));
+
+$sql = "UPDATE op_articles SET status='archived' WHERE up_timestamp <= '$timestamp' AND status='published'";
+
+$conn->query($sql);
+
 // FETCHING POST
 if ($_SERVER['REQUEST_METHOD']=="GET"){
 

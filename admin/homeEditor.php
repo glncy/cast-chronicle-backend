@@ -13,7 +13,7 @@ include('../layout/header.php');
 
 if (isset($_POST['homeData'])){
     $data = $conn->real_escape_string($_POST['homeData']);
-    $sql = "UPDATE op_about SET body='$data'";
+    $sql = "UPDATE op_home SET body='$data'";
     if ($conn->query($sql)){
         echo "<script>alert('Updated!');</script>";
     }

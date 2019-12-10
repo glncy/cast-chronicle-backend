@@ -1187,7 +1187,7 @@
 			return tempCont.getElementsByClassName("ql-editor")[0].innerHTML;
 		}
 
-		function homeAbout(){
+		function saveHome(){
 			var delta = quill.getContents();
 			document.getElementById('homeData').value = quillGetHTML(delta);
 			document.getElementById('homeForm').submit();
