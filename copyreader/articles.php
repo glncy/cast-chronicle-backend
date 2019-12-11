@@ -64,6 +64,7 @@ include('../layout/header.php');
                                 <a href="#" onclick="openLink('<?php echo $obj[$loop]['id']; ?>')" style="text-decoration: none;">
                                     <h4><strong><?php echo $obj[$loop]['title']; ?></strong></h4>
                                     <p>
+                                        <?php echo $obj[$loop]['user_details']['fname']; ?>&nbsp<?php echo $obj[$loop]['user_details']['lname']; ?><br/>
                                         <?php echo $obj[$loop]['date_time']; ?>
                                     </p>
                                 </a>                            
