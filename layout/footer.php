@@ -905,7 +905,7 @@
 			title: "<?php echo $conn->real_escape_string($obj[0]['title']); ?>",
 			body: quillGetHTML(quill.getContents()),
 			status: copyreadStatus,
-			category: "<?php echo $obj[0]['category']; ?>",
+			category: '<?php echo $obj[0]['category']; ?>',
 			article_id: "<?php echo $obj[0]['id']; ?>"
 		}
 
@@ -969,7 +969,7 @@
 			title: "<?php echo $conn->real_escape_string($obj[0]['title']); ?>",
 			body: quillGetHTML(quill.getContents()),
 			status: "published",
-			category: "<?php echo $obj[0]['category']; ?>",
+			category: '<?php echo $obj[0]['category']; ?>',
 			article_id: "<?php echo $obj[0]['id']; ?>"
 		}
 
@@ -1034,7 +1034,7 @@
 			title: "<?php echo $conn->real_escape_string($obj[0]['title']); ?>",
 			body: quillGetHTML(quill.getContents()),
 			status: "pending",
-			category: "<?php echo $obj[0]['category']; ?>",
+			category: '<?php echo $obj[0]['category']; ?>',
 			article_id: "<?php echo $obj[0]['id']; ?>"
 		}
 
@@ -1382,7 +1382,7 @@
 			title: "<?php echo $conn->real_escape_string($obj[0]['title']); ?>",
 			body: quillGetHTML(quill.getContents()),
 			status: "pending",
-			category: "<?php echo $obj[0]['category']; ?>",
+			category: '<?php echo $obj[0]['category']; ?>',
 			article_id: "<?php echo $obj[0]['id']; ?>"
 		}
 
