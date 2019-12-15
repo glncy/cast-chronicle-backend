@@ -58,7 +58,20 @@ include('../layout/header.php');
                     <strong><?php echo $obj[0]['title']; ?></strong>
                 </h2>
                 <h6>
-                    Category: <strong><?php echo ucfirst($obj[0]['category']); ?></strong>
+                    Category: <strong><?php 
+                    $category = json_decode($obj[0]['category'],true);
+                    $catCount = count($category);
+                    $loop=0;
+                    while ($loop<$catCount){
+                        if ($loop+1 == $catCount){
+                            echo ucfirst($category[$loop]);
+                        }
+                        else {
+                            echo ucfirst($category[$loop]).", ";
+                        }
+                        $loop++;
+                    } 
+                    ?></strong>
                 </h6>
                 <hr/>
                 <div id="editor" class="ql-container ql-snow ql-editor">
@@ -88,6 +101,11 @@ include('../layout/header.php');
                     elseif ($obj[0]['status']=="published") {
                 ?>
                 <button type="button" class="btn btn-info btn btn-block" onclick="setUnpublish();" id="unpublishButton">Unpublish</button>
+                <?php
+                    }
+                    else {
+                ?>
+                <center>No Action. This Article is Archived.</center>
                 <?php
                     }
                 ?>

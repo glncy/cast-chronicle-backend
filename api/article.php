@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
         $limit = $conn->real_escape_string($_GET['limit']);
         if (isset($_GET['category'])) {
             $category = $conn->real_escape_string($_GET['category']);
-            $categorySql = " AND category='".$category."'";
+            $categorySql = " AND category LIKE '%".$category."%'";
         }
         else {
             $categorySql = "";
@@ -96,11 +96,11 @@ if ($_SERVER['REQUEST_METHOD']=="GET"){
         if (isset($_GET['category'])) {
             if (isset($_GET['access_token'])) {
                 $category = $conn->real_escape_string($_GET['category']);
-                $categorySql = "WHERE category='".$category."'";
+                $categorySql = "WHERE category LIKE '%".$category."%'";
             }
             else {
                 $category = $conn->real_escape_string($_GET['category']);
-                $categorySql = " AND category='".$category."'";
+                $categorySql = " AND category LIKE '%".$category."%'";
             }
         }
         else {
@@ -256,7 +256,7 @@ elseif ($_SERVER['REQUEST_METHOD']=="POST"){
             $token = $result->fetch_assoc();
             $user_id = $token['user_id'];
             $title = htmlspecialchars($conn->real_escape_string($_POST['title']));
-            $category = htmlspecialchars($conn->real_escape_string($_POST['category']));
+            $category = $conn->real_escape_string($_POST['category']);
             $status = htmlspecialchars($conn->real_escape_string($_POST['status']));
             $body = htmlspecialchars($conn->real_escape_string($_POST['body']));
             $img = htmlspecialchars($conn->real_escape_string($_POST['img']));
@@ -302,7 +302,7 @@ elseif ($_SERVER['REQUEST_METHOD']=="PUT"){
                 if ($result->num_rows > 0) {
                     $title = htmlspecialchars($conn->real_escape_string($_PUT['title']));
                     $status = htmlspecialchars($conn->real_escape_string($_PUT['status']));
-                    $category = htmlspecialchars($conn->real_escape_string($_PUT['category']));
+                    $category = $conn->real_escape_string($_PUT['category']);
                     $body = htmlspecialchars($conn->real_escape_string($_PUT['body']));
                     $time = time();
                     $sql = "UPDATE op_articles SET title='$title',status='$status',body='$body',category='$category',up_timestamp='$time' WHERE id='$article_id'";
@@ -324,7 +324,7 @@ elseif ($_SERVER['REQUEST_METHOD']=="PUT"){
                 if ($result->num_rows > 0) {
                     $title = htmlspecialchars($conn->real_escape_string($_PUT['title']));
                     $status = htmlspecialchars($conn->real_escape_string($_PUT['status']));
-                    $category = htmlspecialchars($conn->real_escape_string($_PUT['category']));
+                    $category = $conn->real_escape_string($_PUT['category']);
                     $body = htmlspecialchars($conn->real_escape_string($_PUT['body']));
                     $img = htmlspecialchars($conn->real_escape_string($_PUT['img']));
                     $time = time();

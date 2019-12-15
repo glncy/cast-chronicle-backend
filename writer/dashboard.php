@@ -28,7 +28,20 @@ include('../layout/header.php');
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>Category</label>
-                            <select id="category" class="form-control">
+                                <div class="button-group">
+                                    <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown">Select&nbsp&nbsp<span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#" class="listCat" data-value="news" tabIndex="-1" style="margin-left: 10px;"><input type="checkbox"/>&nbsp;News</a></li>
+                                        <li><a href="#" class="listCat" data-value="devcomm" tabIndex="-1" style="margin-left: 10px;"><input type="checkbox"/>&nbsp;Devcomm</a></li>
+                                        <li><a href="#" class="listCat" data-value="feature" tabIndex="-1" style="margin-left: 10px;"><input type="checkbox"/>&nbsp;Feature</a></li>
+                                        <li><a href="#" class="listCat" data-value="sports" tabIndex="-1" style="margin-left: 10px;"><input type="checkbox"/>&nbsp;Sports</a></li>
+                                        <li><a href="#" class="listCat" data-value="editorial" tabIndex="-1" style="margin-left: 10px;"><input type="checkbox"/>&nbsp;Editorial</a></li>
+                                        <li><a href="#" class="listCat" data-value="opinion" tabIndex="-1" style="margin-left: 10px;"><input type="checkbox"/>&nbsp;Opinion</a></li>
+                                        <li><a href="#" class="listCat" data-value="literary" tabIndex="-1" style="margin-left: 10px;"><input type="checkbox"/>&nbsp;Literary</a></li>
+                                        <li><a href="#" class="listCat" data-value="photojourn" tabIndex="-1" style="margin-left: 10px;"><input type="checkbox"/>&nbsp;Photo Journalism</a></li>
+                                    </ul>
+                                </div>
+                            <!-- <select id="category" class="form-control">
                                 <option disabled selected value="">Select Category</option>
                                 <option value="news">News</option>
                                 <option value="devcomm">Devcomm</option>
@@ -38,7 +51,7 @@ include('../layout/header.php');
                                 <option value="opinion">Opinion</option>
                                 <option value="literary">Literary</option>
                                 <option value="photojourn">Photo Journalism</option>
-                            </select>
+                            </select> -->
                         </div>
                     </div>
                 </div>

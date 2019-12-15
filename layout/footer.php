@@ -79,6 +79,28 @@
 				]
 			}
 		});
+		
+		var options = [];
+
+		$( '.dropdown-menu .listCat' ).on( 'click', function( event ) {
+			var $target = $( event.currentTarget ),
+				val = $target.attr( 'data-value' ),
+				$inp = $target.find( 'input' ),
+				idx;
+
+			if ( ( idx = options.indexOf( val ) ) > -1 ) {
+				options.splice( idx, 1 );
+				setTimeout( function() { $inp.prop( 'checked', false ) }, 0);
+			} else {
+				options.push( val );
+				setTimeout( function() { $inp.prop( 'checked', true ) }, 0);
+			}
+
+			$( event.target ).blur();
+				
+			console.log( options );
+			return false;
+		});
 
 		function getImage(){
 			var someimage = document.getElementById('editor');
@@ -93,7 +115,8 @@
 		function confirmSubmit(){
 			var ifSubmitted = false;
 			var message = "";
-			if ((document.getElementById("article_title").value != "")&&(document.getElementById("category").value != "")) {
+			var optLength = options.length;
+			if ((document.getElementById("article_title").value != "")&&(optLength != 0)) {
 				var delta = quill.getContents();
 				var data = {
 					access_token: "<?php echo $_COOKIE['access_token']; ?>",
@@ -101,7 +124,7 @@
 					body: quillGetHTML(delta),
 					img: getImage(),
 					status: "draft",
-					category: document.getElementById("category").value
+					category: JSON.stringify(options)
 				}
 
 				$.ajax({
@@ -159,7 +182,7 @@
 						'warning'
 					)
 				}
-				else if (document.getElementById("category").value == ""){
+				else if (optLength == 0){
 					Swal.fire(
 						'Uh oh!',
 						'It has Empty Category!',
@@ -216,6 +239,28 @@
 			}
 		});
 
+		var options = <?php echo $obj[0]['category'];?>;
+
+		$( '.dropdown-menu .listCat' ).on( 'click', function( event ) {
+			var $target = $( event.currentTarget ),
+				val = $target.attr( 'data-value' ),
+				$inp = $target.find( 'input' ),
+				idx;
+
+			if ( ( idx = options.indexOf( val ) ) > -1 ) {
+				options.splice( idx, 1 );
+				setTimeout( function() { $inp.prop( 'checked', false ) }, 0);
+			} else {
+				options.push( val );
+				setTimeout( function() { $inp.prop( 'checked', true ) }, 0);
+			}
+
+			$( event.target ).blur();
+				
+			console.log( options );
+			return false;
+		});
+
 		// var quillBody = quillGetHTML(quill.getContents());
 		// var quillTitle = document.getElementById("article_title").value;
 		<?php
@@ -262,7 +307,8 @@
 		function submitAsDraft(){
 			var ifSubmitted = false;
 			var message = "";
-			if (document.getElementById("article_title").value != "") {
+			var optLength = options.length;
+			if ((document.getElementById("article_title").value != "")&&(optLength != 0)) {
 				var delta = quill.getContents();
 				var data = {
 					access_token: "<?php echo $_COOKIE['access_token']; ?>",
@@ -270,7 +316,7 @@
 					body: quillGetHTML(delta),
 					img: getImage(),
 					status: "draft",
-					category: document.getElementById("category").value,
+					category: JSON.stringify(options),
 					article_id: "<?php echo $obj[0]['id']; ?>"
 				}
 
@@ -412,7 +458,8 @@
 		function submitAsForApproval(){
 			var ifSubmitted = false;
 			var message = "";
-			if (document.getElementById("article_title").value != "") {
+			var optLength = options.length;
+			if ((document.getElementById("article_title").value != "")&&(optLength != 0)) {
 				var delta = quill.getContents();
 				var data = {
 					access_token: "<?php echo $_COOKIE['access_token']; ?>",
@@ -420,7 +467,7 @@
 					body: quillGetHTML(delta),
 					img: getImage(),
 					status: "pending",
-					category: document.getElementById("category").value,
+					category: JSON.stringify(options),
 					article_id: "<?php echo $obj[0]['id']; ?>"
 				}
 
@@ -534,7 +581,8 @@
 		function submitAsDraft(){
 			var ifSubmitted = false;
 			var message = "";
-			if (document.getElementById("article_title").value != "") {
+			var optLength = options.length;
+			if ((document.getElementById("article_title").value != "")&&(optLength != 0)) {
 				var delta = quill.getContents();
 				var data = {
 					access_token: "<?php echo $_COOKIE['access_token']; ?>",
@@ -542,7 +590,7 @@
 					body: quillGetHTML(delta),
 					status: "draft",
 					img: getImage(),
-					category: document.getElementById("category").value,
+					category: JSON.stringify(options),
 					article_id: "<?php echo $obj[0]['id']; ?>"
 				}
 

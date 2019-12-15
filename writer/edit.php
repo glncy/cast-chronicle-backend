@@ -31,7 +31,7 @@ if ($err) {
     echo "cURL Error #:" . $err;
 } else {
     $obj = json_decode($response, true);
-
+    $category = json_decode($obj[0]['category'],true);
     if (isset($obj['status'])){
         if ($obj['status']=="no_access") {
             header("Location: logout.php");
@@ -63,16 +63,29 @@ include('../layout/header.php');
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label>Category</label>
-                            <select id="category" class="form-control">
-                                <option <?php echo ($obj[0]['category'] == "news") ? "selected" : "" ; ?> value="news" >News</option>
-                                <option <?php echo ($obj[0]['category'] == "devcomm") ? "selected" : "" ; ?> value="devcomm">Devcomm</option>
-                                <option <?php echo ($obj[0]['category'] == "feature") ? "selected" : "" ; ?> value="feature">Feature</option>
-                                <option <?php echo ($obj[0]['category'] == "sports") ? "selected" : "" ; ?> value="sports">Sports</option>
-                                <option <?php echo ($obj[0]['category'] == "editorial") ? "selected" : "" ; ?> value="editorial">Editorial</option>
-                                <option <?php echo ($obj[0]['category'] == "opinion") ? "selected" : "" ; ?> value="opinion">Opinion</option>
-                                <option <?php echo ($obj[0]['category'] == "literary") ? "selected" : "" ; ?> value="literary">Literary</option>
-                                <option <?php echo ($obj[0]['category'] == "photojourn") ? "selected" : "" ; ?> value="literary">Photo Journalism</option>
-                            </select>
+                            <div class="button-group">
+                                <button type="button" class="btn btn-default btn-block dropdown-toggle" data-toggle="dropdown">Select&nbsp&nbsp<span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" class="listCat" data-value="news" tabIndex="-1" style="margin-left: 10px;"><input type="checkbox" <?php echo (in_array( "news" ,$category )) ? "checked" : "" ; ?>/>&nbsp;News</a></li>
+                                    <li><a href="#" class="listCat" data-value="devcomm" tabIndex="-1" style="margin-left: 10px;"><input type="checkbox" <?php echo (in_array( "devcomm" ,$category )) ? "checked" : "" ; ?>/>&nbsp;Devcomm</a></li>
+                                    <li><a href="#" class="listCat" data-value="feature" tabIndex="-1" style="margin-left: 10px;"><input type="checkbox" <?php echo (in_array( "feature" ,$category )) ? "checked" : "" ; ?>/>&nbsp;Feature</a></li>
+                                    <li><a href="#" class="listCat" data-value="sports" tabIndex="-1" style="margin-left: 10px;"><input type="checkbox" <?php echo (in_array( "sports" ,$category )) ? "checked" : "" ; ?>/>&nbsp;Sports</a></li>
+                                    <li><a href="#" class="listCat" data-value="editorial" tabIndex="-1" style="margin-left: 10px;"><input type="checkbox" <?php echo (in_array( "editorial" ,$category )) ? "checked" : "" ; ?>/>&nbsp;Editorial</a></li>
+                                    <li><a href="#" class="listCat" data-value="opinion" tabIndex="-1" style="margin-left: 10px;"><input type="checkbox" <?php echo (in_array( "opinion" ,$category )) ? "checked" : "" ; ?>/>&nbsp;Opinion</a></li>
+                                    <li><a href="#" class="listCat" data-value="literary" tabIndex="-1" style="margin-left: 10px;"><input type="checkbox" <?php echo (in_array( "literary" ,$category )) ? "checked" : "" ; ?>/>&nbsp;Literary</a></li>
+                                    <li><a href="#" class="listCat" data-value="photojourn" tabIndex="-1" style="margin-left: 10px;"><input type="checkbox" <?php echo (in_array( "photojourn" ,$category )) ? "checked" : "" ; ?>/>&nbsp;Photo Journalism</a></li>
+                                </ul>
+                            </div>
+                            <!-- <select id="category" class="form-control">
+                                <option <?php //echo ($obj[0]['category'] == "news") ? "selected" : "" ; ?> value="news" >News</option>
+                                <option <?php //echo ($obj[0]['category'] == "devcomm") ? "selected" : "" ; ?> value="devcomm">Devcomm</option>
+                                <option <?php //echo ($obj[0]['category'] == "feature") ? "selected" : "" ; ?> value="feature">Feature</option>
+                                <option <?php //echo ($obj[0]['category'] == "sports") ? "selected" : "" ; ?> value="sports">Sports</option>
+                                <option <?php //echo ($obj[0]['category'] == "editorial") ? "selected" : "" ; ?> value="editorial">Editorial</option>
+                                <option <?php //echo ($obj[0]['category'] == "opinion") ? "selected" : "" ; ?> value="opinion">Opinion</option>
+                                <option <?php //echo ($obj[0]['category'] == "literary") ? "selected" : "" ; ?> value="literary">Literary</option>
+                                <option <?php //echo ($obj[0]['category'] == "photojourn") ? "selected" : "" ; ?> value="literary">Photo Journalism</option>
+                            </select> -->
                         </div>
                     </div>
                 </div>
